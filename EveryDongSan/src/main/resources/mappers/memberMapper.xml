@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dongsan.member.mapper.MemberMapper">
+	<select id="findEmailDomainNum" parameterType="String"
+		resultType="Integer">
+		SELECT domainId
+		FROM email_domain
+		WHERE domain =
+		#{emailDomain}
+
+		UNION
+
+		SELECT 0
+		FROM dual
+		WHERE NOT EXISTS (
+		SELECT 1
+		FROM
+		email_domain
+		WHERE domain = #{emailDomain}
+		)
+	</select>
+
+	<select id="findEmailDomain" parameterType="Integer"
+		resultType="String">
+		select domain
+		from email_domain
+		where domainId =
+		#{emailDomainId}
+	</select>
+
+
+	<insert id="insertEmailDomain" parameterType="String">
+		insert
+		into
+		email_domain(domain)
+		values(#{emailDomain})
+	</insert>
+
+	<select id="findSchoolNum" parameterType="String"
+		resultType="Integer">
+		select schoolId
+		from school
+		where school = #{school}
+	</select>
+
+	<select id="findSchool" parameterType="Integer"
+		resultType="String">
+		select school
+		from school
+		where schoolId = #{schoolId}
+	</select>
+
+	<insert id="signup" parameterType="memberEntity">
+		insert
+		into
+		member(id,pw,name,emailId,emailDomainId,tel,role,schoolId)
+		values(#{id}, #{pw}, #{name},
+		#{emailId},#{emailDomainId},#{tel},#{role},#{schoolId})
+	</insert>
+
+	<select id="findById" parameterType="String"
+		resultType="memberEntity">
+		select *
+		from member
+		where id=#{id}
+	</select>
+
+	<select id="userInfo" parameterType="String"
+		resultType="memberEntity">
+		select *
+		from member
+		where id=#{id}
+	</select>
+
+	<select id="memberDelete" parameterType="String">
+		delete
+		from member
+		where
+		id=#{id}
+	</select>
+
+	<update id="memberUpdate" parameterType="memberEntity">
+		update member
+		set emailId
+		= #{emailId}, emailDomainId = #{emailDomainId}, tel = #{tel}, schoolId
+		= #{schoolId}, pw = #{pw}
+		where id = #{id}
+	</update>
+
+	<select id="findId" parameterType="map" resultType="String">
+		select id
+		from member
+		where emailId = #{emailId} and emailDomainId =
+		#{emailDomainId}
+	</select>
+
+	<update id="updatePassword" parameterType="map">
+		UPDATE member
+		SET pw = #{pw}
+		WHERE emailId = #{emailId} and emailDomainId = #{emailDomainId}
+	</update>
+
+</mapper>
