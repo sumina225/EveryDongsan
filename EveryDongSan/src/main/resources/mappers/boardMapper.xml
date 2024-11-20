@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dongsan.board.mapper.BoardMapper">
+	<!-- BoardEntity와 HomeEntity를 매핑하는 resultMap -->
+	<resultMap id="boardResultMap" type="com.dongsan.board.entity.BoardEntity">
+		<id property="articleNo" column="article_no" />
+		<result property="title" column="title" />
+		<result property="content" column="content" />
+		<result property="hit" column="hit" />
+
+		<!-- homeNo를 사용해 HomeEntity와 매핑 -->
+		<association property="home" column="home_no" javaType="com.dongsan.home.entity.HomeEntity">
+			<result property="no" column="home_no" />
+			<result property="name" column="home_name" />
+			<result property="latitude" column="home_latitude" />
+			<result property="longitude" column="home_longitude" />
+			<result property="area" column="home_area" />
+			<result property="category" column="home_category" />
+			<result property="price" column="home_price" />
+			<result property="rentalType" column="home_rental_type" />
+			<result property="memberId" column="home_member_id" />
+			<result property="schoolId" column="home_school_id" />
+			<result property="score" column="home_score" />
+		</association>
+	</resultMap>
+
+	<insert id="posts" parameterType="com.dongsan.board.entity.BoardEntity">
+		INSERT INTO community (title, memberId, homeNo, content, hit)
+		VALUES (#{title}, #{memberId}, #{homeNo}, #{content}, #{hit})
+	</insert>
+
+
+
+</mapper>

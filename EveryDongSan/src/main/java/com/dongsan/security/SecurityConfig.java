@@ -2,6 +2,7 @@ package com.dongsan.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -28,10 +29,14 @@ public class SecurityConfig {
         http.csrf().disable()
             .authorizeHttpRequests()
             .requestMatchers("/member/signup", "/member/login", "/member/findId", "/member/findPw").permitAll()
+            .requestMatchers(HttpMethod.POST, "/posts").hasAuthority("부동산")
+            .requestMatchers(HttpMethod.PUT, "/posts/**").hasAuthority("부동산") // 글 수정 권한
+            .requestMatchers(HttpMethod.DELETE, "/posts/**").hasAuthority("부동산")
             .anyRequest().authenticated()
             .and()
             .addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
+    
 }

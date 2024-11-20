@@ -1,10 +1,19 @@
 CREATE TABLE `home` (
-  `no` INT PRIMARY KEY AUTO_INCREMENT,
-  `memberId` VARCHAR(50) NOT NULL,
-  `regionId` INT NOT NULL,
-  `score` INT,
-  `schoolId` INT
+    `no` INT PRIMARY KEY AUTO_INCREMENT,        -- 이름
+    `name` VARCHAR(100) NOT NULL,               -- 이름
+    `latitude` DECIMAL(9, 6),                   -- 위도
+    `longitude` DECIMAL(9, 6),                  -- 경도
+    `area` DECIMAL(10, 2),                      -- 면적
+    `category` VARCHAR(50),                     -- 분류 (예: 아파트, 원룸, 오피스텔)
+    `price` INT,                                -- 가격
+    `rentalType` VARCHAR(10),                   -- 전월세 여부
+    `memberId` VARCHAR(50),                     -- 부동산업자(브로커) ID (member 테이블 참조)
+    `schoolId` INT,
+    `score` INT,                             -- 학교 ID (외래키)
+    FOREIGN KEY (`schoolId`) REFERENCES `school`(`schoolId`),  -- 학교 ID 외래키
+    FOREIGN KEY (`memberId`) REFERENCES `member`(`id`)         -- 부동산업자 ID 외래키
 );
+
 
 CREATE TABLE `member` (
   `id` VARCHAR(50) PRIMARY KEY,
@@ -42,7 +51,7 @@ CREATE TABLE `review` (
 );
 
 CREATE TABLE `community` (
-  `articleNo` INT PRIMARY KEY,
+  `articleNo` INT PRIMARY KEY AUTO_INCREMENT,
   `title` VARCHAR(50),
   `memberId` VARCHAR(50),
   `homeNo` INT,
@@ -66,22 +75,36 @@ CREATE TABLE `chat_message` (
   `createdAt` DATETIME DEFAULT (CURRENT_TIMESTAMP)
 );
 
-ALTER TABLE `region` ADD FOREIGN KEY (`regionId`) REFERENCES `home` (`regionId`);
+-- DELIMITER 변경 (기본 세미콜론을 다른 문자로 변경)
+DELIMITER $$
 
-ALTER TABLE `school` ADD FOREIGN KEY (`schoolId`) REFERENCES `home` (`schoolId`);
+-- 트리거 정의
+CREATE TRIGGER update_home_score_after_insert
+AFTER INSERT ON review
+FOR EACH ROW
+BEGIN
+    UPDATE home
+    SET score = (
+        SELECT COALESCE(AVG(r.reviewScore), 0)
+        FROM review r
+        WHERE r.homeNo = NEW.homeNo
+    )
+    WHERE no = NEW.homeNo;
+END$$
 
-ALTER TABLE `email_domain` ADD FOREIGN KEY (`domainId`) REFERENCES `member` (`emailDomainId`);
+CREATE TRIGGER update_home_score_after_update
+AFTER UPDATE ON review
+FOR EACH ROW
+BEGIN
+    UPDATE home
+    SET score = (
+        SELECT COALESCE(AVG(r.reviewScore), 0)
+        FROM review r
+        WHERE r.homeNo = NEW.homeNo
+    )
+    WHERE no = NEW.homeNo;
+END$$
 
-ALTER TABLE `school` ADD FOREIGN KEY (`schoolId`) REFERENCES `member` (`schoolId`);
+-- DELIMITER 원래대로 세미콜론으로 변경
+DELIMITER ;
 
-ALTER TABLE `home` ADD FOREIGN KEY (`no`) REFERENCES `review` (`homeNo`);
-
-ALTER TABLE `member` ADD FOREIGN KEY (`id`) REFERENCES `review` (`memberId`);
-
-ALTER TABLE `home` ADD FOREIGN KEY (`no`) REFERENCES `community` (`homeNo`);
-
-ALTER TABLE `member` ADD FOREIGN KEY (`id`) REFERENCES `community` (`memberId`);
-
-ALTER TABLE `home` ADD FOREIGN KEY (`no`) REFERENCES `chat` (`homeNo`);
-
-ALTER TABLE `chat` ADD FOREIGN KEY (`chatId`) REFERENCES `chat_message` (`chatId`);

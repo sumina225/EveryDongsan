@@ -1,9 +1,12 @@
 package com.dongsan.security;
 
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+
+import com.dongsan.member.model.Member;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -16,9 +19,10 @@ public class JwtTokenUtil {
 	private String secretKey;
 	private final long EXPIRATION_TIME = 1000*60*60;
 	
-	public String generateToken(String username) {
+	public String generateToken(Member member) {
 		return Jwts.builder()
-				.setSubject(username)
+				.setSubject(member.getId())
+				.claim("roles", List.of(member.getRole()))
 				.setIssuedAt(new Date())
 				.setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
 				.signWith(SignatureAlgorithm.HS512, secretKey)
@@ -50,6 +54,14 @@ public class JwtTokenUtil {
     // 토큰 유효성 검사
     public boolean validateToken(String token, String username) {
         return (username.equals(extractUsername(token)) && !isTokenExpired(token));
+    }
+    
+    public List<String> extractRoles(String token) {
+        Claims claims = Jwts.parser()
+                .setSigningKey(secretKey)
+                .parseClaimsJws(token)
+                .getBody();
+        return claims.get("roles", List.class); // JWT 클레임에서 "roles"를 추출
     }
 	
 }

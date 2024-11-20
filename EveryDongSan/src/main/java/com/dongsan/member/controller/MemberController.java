@@ -78,7 +78,7 @@ public class MemberController {
 		try {
 			Member member = memberService.login(id, password);
 			if (member != null) {
-				String token = jwtTokenUtil.generateToken(member.getId());
+				String token = jwtTokenUtil.generateToken(member);
 				response.setHeader("Authorization", "Bearer " + token);
 
 				return ResponseEntity.ok("로그인 성공");
