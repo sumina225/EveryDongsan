@@ -36,7 +36,6 @@ onMounted(() => {
 
 <style scoped>
 .content {
-  min-height: 100vh;
   padding-bottom: 60px; /* footer 높이만큼 패딩 추가 */
 }
 

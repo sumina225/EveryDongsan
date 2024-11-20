@@ -5,7 +5,9 @@
       <MainSideBar />
       <div class="content">
         <PostList title="섹션 1">
-          <p>여기는 섹션 1 내용입니다.</p>
+          <router-link to="/searchMap"
+            ><p>여기는 섹션 1 내용입니다.</p></router-link
+          >
         </PostList>
         <PostList title="섹션 2">
           <p>여기는 섹션 2 내용입니다.</p>

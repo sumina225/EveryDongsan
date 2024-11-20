@@ -36,9 +36,9 @@
               />
               <span></span>
             </dd>
-            <p>{{ msgBox }}</p>
+            <p>{{ msgPw }}</p>
           </dl>
-          <dl :class="{ ok: check2 === 1, error: check2 === 0 }">
+          <dl :class="{ ok: check3 === 1, error: check3 === 0 }">
             <dt>비밀번호 재확인</dt>
             <dd>
               <input
@@ -49,11 +49,11 @@
                 autocomplete="off"
                 title="비밀번호 재확인"
               />
+              <span></span>
             </dd>
-            <span></span>
-            <p>{{ msgBox }}</p>
+            <p>{{ msgPw2 }}</p>
           </dl>
-          <dl>
+          <dl :class="{ ok: checkName === 1, error: checkName === 0 }">
             <dt>이름</dt>
             <dd>
               <input
@@ -64,9 +64,14 @@
                 autocomplete="off"
                 title="이름"
               />
+              <span></span>
             </dd>
+            <p>{{ msgName }}</p>
           </dl>
-          <dl class="birth">
+          <dl
+            class="birth"
+            :class="{ ok: checkBirth === 1, error: checkBirth === 0 }"
+          >
             <dt>생년월일</dt>
             <dd>
               <input
@@ -99,7 +104,9 @@
                   title="일"
                 />
               </div>
+              <span style="right: 18px"></span>
             </dd>
+            <p>{{ birthMsg }}</p>
           </dl>
           <dl class="radio_select role">
             <dt>역할</dt>
@@ -131,7 +138,10 @@
             </dd>
             <p></p>
           </dl>
-          <dl class="email">
+          <dl
+            class="email"
+            :class="{ ok: checkEmail === 1, error: checkEmail === 0 }"
+          >
             <dt>이메일</dt>
             <dd>
               <input
@@ -142,9 +152,14 @@
                 autocomplete="off"
                 title="이메일"
               />
+              <span></span>
             </dd>
+            <p>{{ msgEmail }}</p>
           </dl>
-          <dl class="phone">
+          <dl
+            class="phone"
+            :class="{ ok: checkPhone === 1, error: checkPhone === 0 }"
+          >
             <dt>휴대폰</dt>
             <dd>
               <input
@@ -155,7 +170,9 @@
                 autocomplete="off"
                 placeholder="‘-’ 없이 입력"
               />
+              <span></span>
             </dd>
+            <p>{{ msgPhone }}</p>
           </dl>
         </div>
         <div class="btn_wrap">
@@ -174,9 +191,15 @@ import { useRouter } from "vue-router";
 const router = useRouter();
 const selectedRole = ref("");
 const check = ref(-1); // 체크상태 초기값 -1
-const check2 = ref(-1);
+const check2 = ref(-1); // pwd 체크
+const check3 = ref(-1); // pwd 재확인 체크
+const checkName = ref(-1); // nameCheck 이름 체쿠
+//------------------------------------------------------------
 const msgBox = ref(""); // 메세지 박스
-const uid = ref("");
+const msgPw = ref(""); // 비밀번호 체크
+const msgPw2 = ref("");
+const msgName = ref(""); // 이름체크 메세지 박스
+//---------------------------------------------------------
 
 // 특수문자 체크 (한글+영문+숫자 허용)
 const _valid_value_check = (value) => {
@@ -187,6 +210,14 @@ const _valid_value_check = (value) => {
     }
   }
   return false;
+};
+
+//특수문자 체크(이름 확인용,영문+한글 허용)
+const _valid_name_check = (value) => {
+  const regex = /^[a-zA-Z가-힣]*$/;
+
+  //정규식을 사용하여 값이 한글과 영문만 포함하는지 확인
+  return regex.test(value);
 };
 
 // 특수문자 체크 (영문+숫자 허용)
@@ -242,6 +273,9 @@ const _valid_byte_check = (min, max, value) => {
 };
 
 // id 체크하는 함수들 ----------------------------------------------------------------
+
+const uid = ref("");
+
 watch(uid, (newVal) => {
   uidCheck();
 });
@@ -292,18 +326,17 @@ watch(password1, (newVal) => {
 });
 
 watch(password2, (newVal) => {
-  pwdCheck();
+  pwdCheck2();
 });
 
 const pwdCheck = () => {
   const pwd = password1.value; // 비밀번호 입력값
-  const pwdConfirm = password2.value; // 비밀번호 재입력값
-  msgBox.value = ""; // 메세지 초기화
+  msgPw.value = ""; // 메세지 초기화
   check2.value = -1; // 초기화 상태
 
   // 비밀번호가 비어있는지 체크
   if (pwd.length <= 0) {
-    msgBox.value = "비밀번호를 입력해주세요.";
+    msgPw.value = "비밀번호를 입력해주세요.";
     check2.value = 0; // 에러 상태
     return;
   }
@@ -323,32 +356,191 @@ const pwdCheck = () => {
     errorMessages.push("비밀번호에 한글은 사용할 수 없습니다.");
   }
 
-  // 비밀번호와 비밀번호 확인 일치 체크
-  if (pwd !== pwdConfirm) {
-    isOk = false;
-    errorMessages.push("비밀번호가 일치하지 않습니다.");
-  }
-
   // 비밀번호 조건이 하나라도 오류가 있으면 오류 메시지 표시
   if (!isOk) {
-    msgBox.value = errorMessages.join(" ");
+    msgPw.value = errorMessages.join(" ");
     check2.value = 0; // 에러 상태
     return;
   }
 
   // 모든 조건을 만족하면
   check2.value = 1; // 성공 상태
-  msgBox.value = "사용할 수 있는 비밀번호입니다.";
+};
+
+const pwdCheck2 = () => {
+  const pwd = password1.value;
+  const pwdConfirm = password2.value;
+  check3.value = -1;
+  msgPw2.value = "";
+
+  if (pwd !== pwdConfirm || check2.value !== 1) {
+    check3.value = 0; // 에러코드
+    msgPw2.value = "비밀번호가 일치하지 않습니다.";
+    return;
+  }
+
+  check3.value = 1;
 };
 
 //-------------------------------- 비밀번호 체크 end --------------------------//
 
+//---------------- 이름 체크 start --------------------- //
 const userName = ref("");
+
+watch(userName, (newVal) => {
+  nameCheck();
+});
+
+const nameCheck = () => {
+  const name = userName.value;
+
+  checkName.value = -1; // 초기화
+  msgName.value = "";
+
+  if (name.length <= 0) {
+    checkName.value = 0;
+    msgName.value = "이름을 입력해주세요.";
+    return;
+  }
+
+  if (!_valid_name_check(name)) {
+    checkName.value = 0;
+    msgName.value = "이름을 정확히 입력해주세요.(특수문자,숫자,공백 입력 불가)";
+    return;
+  }
+
+  checkName.value = 1;
+};
+
+// ----------------------------- 생년월일 체크 ----------------------------- //
+
 const year = ref("");
 const month = ref("");
 const day = ref("");
+const checkBirth = ref(-1); // 초기화
+const birthMsg = ref(""); // 생년월일 관련 메시지
+
+// 생년월일 유효성 체크 함수
+const birthCheck = () => {
+  birthMsg.value = ""; // 초기화
+  checkBirth.value = -1;
+
+  const value = year.value + month.value + day.value;
+
+  // 8자리 입력 확인
+  if (value.length !== 8) {
+    birthMsg.value = "생년월일을 8자리로 입력해주세요.";
+    checkBirth.value = 0;
+    return;
+  }
+
+  // 숫자만 입력 확인
+  if (!/^\d{8}$/.test(value)) {
+    birthMsg.value = "생년월일은 숫자로만 입력해주세요.";
+    checkBirth.value = 0;
+    return;
+  }
+
+  // 연, 월, 일 유효성 검사
+  const currentYear = new Date().getFullYear();
+  const inputYear = parseInt(year.value);
+  const inputMonth = parseInt(month.value);
+  const inputDay = parseInt(day.value);
+
+  // 올바른 연도, 월, 일 범위 확인
+  if (
+    inputYear < 1900 ||
+    inputYear > currentYear ||
+    inputMonth > 12 ||
+    inputDay > 31
+  ) {
+    birthMsg.value = "올바른 생년월일을 입력해주세요.";
+    checkBirth.value = 0;
+    return;
+  }
+
+  // 만 14세 미만 회원 가입 제한
+  if (currentYear - inputYear < 14) {
+    birthMsg.value = "만 14세 미만은 가입할 수 없습니다.";
+    checkBirth.value = 0;
+    return;
+  }
+
+  checkBirth.value = 1;
+};
+
+// 생년월일 입력값이 변경될 때마다 유효성 체크
+watch([year, month, day], () => {
+  birthCheck();
+});
+
+// ----------------------------------이메일 체크 ---------------------------------- //
+
 const email = ref("");
+const msgEmail = ref("");
+const checkEmail = ref(-1);
+
+watch(email, (newVal) => {
+  EmailCheck();
+});
+
+const EmailCheck = () => {
+  msgEmail.value = "";
+  checkEmail.value = -1;
+
+  if (email.value.length <= 0) {
+    checkEmail.value = 0;
+    msgEmail.value = "이메일을 입력해주세요.";
+    return;
+  }
+
+  // 이메일 정규식 체크
+  const emailRegex = /^[a-z0-9._\-]{3,}@[a-z0-9.-]+\.[a-z]{2,4}$/i;
+  if (!emailRegex.test(email.value)) {
+    checkEmail.value = 0;
+    msgEmail.value = "올바른 이메일 주소를 입력해주세요.";
+    return;
+  }
+
+  checkEmail.value = 1;
+};
+
+// ---------------------------------- 휴대폰 번호 체크 ---------------------- //
 const mobile = ref("");
+const checkPhone = ref(-1);
+const msgPhone = ref("");
+
+watch(mobile, (newVal) => {
+  PhoneCheck();
+});
+
+// 휴대폰 번호 유효성 체크
+const PhoneCheck = () => {
+  msgPhone.value = ""; // 메세지 초기화
+  checkPhone.value = -1; // 초기화 상태
+
+  const number = mobile.value.trim();
+
+  // 번호가 비어있는지 체크
+  if (number.length <= 0) {
+    msgPhone.value = "번호를 입력해주세요.";
+    checkPhone.value = 0;
+    return;
+  }
+
+  // 010, 011, 019 등으로 시작하는지 확인
+  const phoneRegex = /^(01[0-9])(\d{7,8})$/; // 한국의 휴대폰 번호 형식에 맞는 정규식
+  if (!phoneRegex.test(number)) {
+    msgPhone.value = "올바른 휴대폰 번호를 입력해주세요.";
+    checkPhone.value = 0;
+    return;
+  }
+
+  // 모든 조건을 만족하면
+  checkPhone.value = 1; // 성공 상태
+};
+
+//-------------------------------- 입력부분 체크 END ------ //
 
 // 다음 단계로 이동하는 함수
 const nextStep = () => {
@@ -400,7 +592,6 @@ div {
   max-width: 500px; /* 스텝 크기를 제한 */
   padding: 20px;
   background: #fafafa; /* 배경 색을 추가하면 더 보기 좋음 */
-  /* box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 그림자 추가 */
   margin: auto;
 }
 
@@ -435,12 +626,6 @@ div {
 }
 
 /* ok 처리 -------------------------------------------------------- */
-.membership input:checked + label em,
-.membership label.on em {
-  background-color: #3d82f7;
-  border: 1px solid #3d82f7;
-}
-
 .membership dl.ok dd input {
   border-color: #3d82f7;
 }
@@ -450,7 +635,7 @@ div {
   display: block;
   right: 10px;
   width: 12px;
-  height: 12px;
+  height: 10px;
   top: 20px;
   cursor: pointer;
   background-size: 100% 100%;
@@ -458,14 +643,14 @@ div {
   background-image: url(data:image/svg+xml;charset=utf-8;base64,PHN2ZyB4bWxucz0naHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmcnIHZpZXdCb3g9JzAgMCAxNSAxMSc+PHBhdGggIGZpbGw9JyMyZTZhZmQnIGZpbGwtcnVsZT0nZXZlbm9kZCcgZD0nTTUuODIyIDEwLjUwMmwtNC42MS01LjMxMUMuODU1IDQuNzguOSA0LjE1OCAxLjMxMSAzLjgwMWMuNDEyLS4zNTYgMS4wMzQtLjMxMiAxLjM5MS4wOTlsMy4yNTcgMy43NTJMMTMuMTE0Ljg0OGMuMzk0LS4zNzYgMS4wMTktLjM1OSAxLjM5NC4wMzQuMzc1LjM5NC4zNiAxLjAxOC0uMDM1IDEuMzkzbC04LjY1MSA4LjIyN3onLz48L3N2Zz4=);
 }
 
-.membership dl.ok p {
+/* .membership dl.ok p {
   clear: both;
   display: block;
   margin-top: 7px;
   font-size: 12px;
   color: #3d82f7;
   line-height: 1.4;
-}
+} */
 
 /* 아이디,비밀번호 에러 및 ajax 처리 이벤트 */
 .membership dl p {
@@ -490,7 +675,7 @@ div {
   display: block;
   right: 10px;
   width: 12px;
-  height: 12px;
+  height: 10px;
   top: 20px;
   cursor: pointer;
   background-size: 100% 100%;

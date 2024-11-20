@@ -15,7 +15,7 @@
       <div class="signup-button" @click="goToSignup">회원가입</div>
 
       <!-- 아이디/비밀번호 찾기 -->
-      <div class="find-password">아이디/비밀번호 찾기</div>
+      <div class="find-password" @click="goToFind">아이디/비밀번호 찾기</div>
     </div>
 
     <!-- 우리학교 커뮤니티 둘러보기 -->
@@ -75,6 +75,10 @@ const goToLogin = () => {
 
 const goToSignup = () => {
   router.push("/sign");
+};
+
+const goToFind = () => {
+  router.push("/find");
 };
 
 const searchCampus = () => {

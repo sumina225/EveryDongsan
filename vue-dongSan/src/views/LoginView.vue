@@ -26,7 +26,7 @@
           <input type="checkbox" v-model="isChecked" class="checkbox-input" />
           <span class="checkbox"></span> 로그인 유지
         </label>
-        <router-link to="/forgot-password" class="forgot-password"
+        <router-link to="/find" class="forgot-password"
           >아이디/비밀번호 찾기</router-link
         >
       </div>
