@@ -7,4 +7,5 @@ import com.dongsan.board.model.Board;
 public interface BoardService {
 	boolean posts(Board board);
 	List<Board> listAll();
+	boolean deleteBoard(int articleNo,String username);
 }

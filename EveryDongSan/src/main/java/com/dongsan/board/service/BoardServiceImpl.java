@@ -14,11 +14,11 @@ import com.dongsan.home.entity.HomeEntity;
 import com.dongsan.home.model.Home;
 
 @Service
-public class BoardServiceImpl implements BoardService{
-	
+public class BoardServiceImpl implements BoardService {
+
 	@Autowired
 	private BoardMapper boardMapper;
-	
+
 	@Autowired
 	private HomeMapper homeMapper;
 
@@ -28,25 +28,29 @@ public class BoardServiceImpl implements BoardService{
 		homeEntity.setSchoolId(homeMapper.findSchoolNum(board.getHome().getSchool()));
 		// 이름, 멤버id가 중복되는게 있으면 추가 x
 		int check = homeMapper.findHome(homeEntity);
-		if(check > 0) {
+		BoardEntity boardEntity = board.toEntity();
+		if(boardMapper.findBoard(boardEntity) > 0) {
 			return false;
 		}
-		homeMapper.insertHome(homeEntity);
+		if (check == 0) {
+			homeMapper.insertHome(homeEntity);
+		}
 		homeEntity.setNo(homeMapper.getHomeNo(homeEntity));
 		
-		BoardEntity boardEntity = board.toEntity();
-		boardEntity.setHomeNo(homeEntity.getNo());
 		
+		boardEntity.setHomeNo(homeEntity.getNo());
 		int n = boardMapper.posts(boardEntity);
-		if(n > 0) return true;
-		else return false;
+		if (n > 0)
+			return true;
+		else
+			return false;
 	}
 
 	@Override
 	public List<Board> listAll() {
 		List<BoardEntity> entityList = boardMapper.listAll();
 		List<Board> list = new ArrayList<>();
-		for(BoardEntity b : entityList) {
+		for (BoardEntity b : entityList) {
 			Board temp = b.toDto();
 			HomeEntity homeEntity = homeMapper.findHomeByNum(b.getHomeNo()).get(0);
 			Home home = homeEntity.toDto();
@@ -57,4 +61,12 @@ public class BoardServiceImpl implements BoardService{
 		return list;
 	}
 
+	@Override
+	public boolean deleteBoard(int articleNo, String username) {
+		if(username.equals(boardMapper.findMemberIdByBoard(articleNo))) {
+			boardMapper.deleteBoard(articleNo);
+			return true;
+		}
+		return false;
+	}
 }

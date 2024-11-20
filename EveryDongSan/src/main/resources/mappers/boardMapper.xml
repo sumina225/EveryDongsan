@@ -35,6 +35,24 @@
 		select *
 		from community
 	</select>
+	
+	<delete id="deleteBoard" parameterType="Integer">
+		delete
+		from community
+		where articleNo = #{articleNo}
+	</delete>
+	
+	<select id="findMemberIdByBoard" parameterType="Integer" resultType="String">
+		select memberId
+		from community
+		where articleNo = #{articleNo}
+	</select>
+	
+	<select id="findBoard" parameterType="boardEntity" resultType="Integer">
+		select count(*)
+		from community
+		where memberId = #{memberId} and title = #{title}
+	</select>
 
 
 

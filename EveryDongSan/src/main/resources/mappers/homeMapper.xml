@@ -27,7 +27,7 @@
 	</insert>
 
 	<select id="findHome" parameterType="homeEntity" resultType="Integer">
-		SELECT COUNT(*)
+		SELECT no
 		FROM home
 		WHERE memberId = #{memberId} AND name = #{name}
 	</select>

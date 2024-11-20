@@ -11,4 +11,7 @@ import com.dongsan.home.entity.HomeEntity;
 public interface BoardMapper {
 	int posts(BoardEntity board);
 	List<BoardEntity> listAll();
+	void deleteBoard(int articleNo);
+	String findMemberIdByBoard(int articleNo);
+	int findBoard(BoardEntity board);
 }
