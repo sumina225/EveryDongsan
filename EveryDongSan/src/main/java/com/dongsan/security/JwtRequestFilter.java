@@ -62,12 +62,21 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
             // 토큰 검증
             if (jwtTokenUtil.validateToken(token, userDetails.getUsername())) {
-            	
-            	 List<String> roles = jwtTokenUtil.extractRoles(token);
-                 List<SimpleGrantedAuthority> authorities = roles.stream()
-                                                           .map(SimpleGrantedAuthority::new)
-                                                           .toList();
-            	
+                List<String> roles = jwtTokenUtil.extractRoles(token);
+
+                // "부동산" 역할 확인
+                if (!roles.contains("부동산")) {
+                    logger.error("필수 권한(부동산)이 없습니다.");
+                    response.setStatus(HttpServletResponse.SC_FORBIDDEN);
+                    response.getWriter().write("Insufficient permissions.");
+                    return;
+                }
+
+                // 권한 변환
+                List<SimpleGrantedAuthority> authorities = roles.stream()
+                        .map(SimpleGrantedAuthority::new)
+                        .toList();
+
                 UsernamePasswordAuthenticationToken authenticationToken =
                         new UsernamePasswordAuthenticationToken(userDetails, null, authorities);
                 authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));

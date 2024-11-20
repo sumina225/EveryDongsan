@@ -32,7 +32,5 @@ public class Board {
     			.homeNo(home.getNo())
     			.memberId(home.getMemberId())
     			.build();
-    	
-    	
     }
 }

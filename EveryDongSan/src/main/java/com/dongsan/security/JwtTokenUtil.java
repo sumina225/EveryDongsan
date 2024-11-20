@@ -61,7 +61,9 @@ public class JwtTokenUtil {
                 .setSigningKey(secretKey)
                 .parseClaimsJws(token)
                 .getBody();
-        return claims.get("roles", List.class); // JWT 클레임에서 "roles"를 추출
+        List<String> roles = claims.get("roles", List.class);
+        System.out.println(roles);
+        return roles; // JWT 클레임에서 "roles"를 추출
     }
 	
 }

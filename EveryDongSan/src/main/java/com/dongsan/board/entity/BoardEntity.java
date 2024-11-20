@@ -2,6 +2,7 @@ package com.dongsan.board.entity;
 
 import java.util.List;
 
+import com.dongsan.board.model.Board;
 import com.dongsan.board.model.Review;
 import com.dongsan.home.entity.HomeEntity;
 import com.dongsan.home.model.Home;
@@ -24,6 +25,12 @@ public class BoardEntity {
 	private String content;
 	private int hit = 0;
 	
-	
-	
+	public Board toDto() {
+		return Board.builder()
+				.articleNo(articleNo)
+				.content(content)
+				.title(title)
+				.hit(hit)
+				.build();	
+	}
 }

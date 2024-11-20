@@ -4,13 +4,13 @@
 
 <mapper namespace="com.dongsan.board.mapper.BoardMapper">
 	<!-- BoardEntity와 HomeEntity를 매핑하는 resultMap -->
-	<resultMap id="boardResultMap" type="com.dongsan.board.entity.BoardEntity">
+	<!-- <resultMap id="boardResultMap" type="com.dongsan.board.entity.BoardEntity">
 		<id property="articleNo" column="article_no" />
 		<result property="title" column="title" />
 		<result property="content" column="content" />
 		<result property="hit" column="hit" />
 
-		<!-- homeNo를 사용해 HomeEntity와 매핑 -->
+		homeNo를 사용해 HomeEntity와 매핑
 		<association property="home" column="home_no" javaType="com.dongsan.home.entity.HomeEntity">
 			<result property="no" column="home_no" />
 			<result property="name" column="home_name" />
@@ -25,11 +25,16 @@
 			<result property="score" column="home_score" />
 		</association>
 	</resultMap>
-
+ -->
 	<insert id="posts" parameterType="com.dongsan.board.entity.BoardEntity">
 		INSERT INTO community (title, memberId, homeNo, content, hit)
 		VALUES (#{title}, #{memberId}, #{homeNo}, #{content}, #{hit})
 	</insert>
+	
+	<select id="listAll" resultType="boardEntity">
+		select *
+		from community
+	</select>
 
 
 

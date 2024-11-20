@@ -1,3 +1,7 @@
+-- create schema dongsan; 
+
+use dongsan;
+
 CREATE TABLE `home` (
     `no` INT PRIMARY KEY AUTO_INCREMENT,        -- 이름
     `name` VARCHAR(100) NOT NULL,               -- 이름
@@ -9,9 +13,8 @@ CREATE TABLE `home` (
     `rentalType` VARCHAR(10),                   -- 전월세 여부
     `memberId` VARCHAR(50),                     -- 부동산업자(브로커) ID (member 테이블 참조)
     `schoolId` INT,
-    `score` INT,                             -- 학교 ID (외래키)
-    FOREIGN KEY (`schoolId`) REFERENCES `school`(`schoolId`),  -- 학교 ID 외래키
-    FOREIGN KEY (`memberId`) REFERENCES `member`(`id`)         -- 부동산업자 ID 외래키
+    `score` INT                         -- 학교 ID (외래키)
+   
 );
 
 

@@ -9,19 +9,41 @@
 		from school
 		where school = #{school}
 	</select>
-	
-	<select id="getHomeNo" parameterType="homeEntity" resultType="Integer">
+
+	<select id="getHomeNo" parameterType="homeEntity"
+		resultType="Integer">
 		select no
 		from home
-		where name = #{name} and memberId = #{memberId}
+		where name = #{name} and memberId =
+		#{memberId}
 	</select>
-	
+
 	<insert id="insertHome" parameterType="homeEntity">
-		insert 
-		into home(name,latitude,longitude,area,category,price,rentalType,memberId,schoolId,score)
+		insert
+		into
+		home(name,latitude,longitude,area,category,price,rentalType,memberId,schoolId,score)
 		values(#{name},#{latitude},#{longitude},#{area},#{category},#{price}
 		,#{rentalType},#{memberId},#{schoolId},0)
 	</insert>
+
+	<select id="findHome" parameterType="homeEntity" resultType="Integer">
+		SELECT COUNT(*)
+		FROM home
+		WHERE memberId = #{memberId} AND name = #{name}
+	</select>
+	
+	<select id="findHomeByNum" parameterType="Integer" resultType="homeEntity">
+		select *
+		from home
+		where no = #{homeNo}
+	</select>
+	
+	<select id="findSchool" parameterType="Integer" resultType="String">
+		select school
+		from school
+		where schoolId = #{schoolId}
+	</select>
+
 
 
 </mapper>
