@@ -13,6 +13,7 @@ public interface HomeMapper {
 	int getHomeNo(HomeEntity homeEntity);
 	int findHome(HomeEntity homeEntity);
 	List<HomeEntity> findHomeByNum(int homeNo);
+	void updateHome(HomeEntity homeEntity);
 	
 	int findSchoolNum(String school);
 	String findSchool(int schoolId);

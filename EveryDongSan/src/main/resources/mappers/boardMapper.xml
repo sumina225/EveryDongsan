@@ -48,10 +48,50 @@
 		where articleNo = #{articleNo}
 	</select>
 	
+	<select id="findHomeNoByBoard" parameterType="Integer" resultType="Integer">
+		select homeNo
+		from community
+		where articleNo = #{articleNo}
+	</select>
+	
 	<select id="findBoard" parameterType="boardEntity" resultType="Integer">
 		select count(*)
 		from community
 		where memberId = #{memberId} and title = #{title}
+	</select>
+	
+	<update id="updateBoard" parameterType="boardEntity">
+		update community
+		set title=#{title}, content=#{content}
+		where articleNo = #{articleNo}
+	</update>
+	
+	<select id="myList" parameterType="String">
+		select *
+		from community
+		where memberId = #{memberId}
+	</select>
+	
+	<select id="searchBySchoolId" parameterType="Integer" resultType="BoardEntity">
+    	SELECT 
+        c.articleNo AS articleNo,
+        c.title AS title,
+        c.homeNo AS homeNo,
+        c.memberId AS memberId,
+        c.content AS content,
+        c.hit AS hit
+    	FROM 
+        community c
+    	JOIN 
+        home h ON c.homeNo = h.no
+   		WHERE 
+        h.schoolId = #{schoolId}
+	</select>
+	
+	<select id="search" parameterType="String" resultType="BoardEntity">
+    	SELECT *
+    	FROM community
+    	WHERE title LIKE CONCAT('%', #{content}, '%')
 	</select>
 
 

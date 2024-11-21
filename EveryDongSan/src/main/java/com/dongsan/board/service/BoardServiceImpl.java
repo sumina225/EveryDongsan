@@ -69,4 +69,70 @@ public class BoardServiceImpl implements BoardService {
 		}
 		return false;
 	}
+
+	@Override
+	public boolean updateBoard(int articleNo, String username,Board board) {
+		if(username.equals(boardMapper.findMemberIdByBoard(articleNo))) {
+			System.out.println(board);
+			board.setArticleNo(articleNo);
+			// find
+			
+			HomeEntity homeEntity = board.getHome().toEntity();
+			homeEntity.setNo(boardMapper.findHomeNoByBoard(articleNo));
+			homeEntity.setSchoolId(homeMapper.findSchoolNum(board.getHome().getSchool()));
+			System.out.println(homeEntity);
+			homeMapper.updateHome(homeEntity);
+			
+			BoardEntity boardEntity = board.toEntity();
+			boardMapper.updateBoard(boardEntity);
+			return true;
+		}
+		return false;
+	}
+
+	@Override
+	public List<Board> myList(String username) {
+		List<BoardEntity> entityList = boardMapper.myList(username);
+		List<Board> list = new ArrayList<>();
+		for (BoardEntity b : entityList) {
+			Board temp = b.toDto();
+			HomeEntity homeEntity = homeMapper.findHomeByNum(b.getHomeNo()).get(0);
+			Home home = homeEntity.toDto();
+			home.setSchool(homeMapper.findSchool(homeEntity.getSchoolId()));
+			temp.setHome(home);
+			list.add(temp);
+		}
+		return list;
+	}
+
+	@Override
+	public List<Board> searchBySchool(String school) {
+		int schoolId = homeMapper.findSchoolNum(school);
+		List<BoardEntity> entityList = boardMapper.searchBySchoolId(schoolId);
+		List<Board> list = new ArrayList<>();
+		for (BoardEntity b : entityList) {
+			Board temp = b.toDto();
+			HomeEntity homeEntity = homeMapper.findHomeByNum(b.getHomeNo()).get(0);
+			Home home = homeEntity.toDto();
+			home.setSchool(homeMapper.findSchool(homeEntity.getSchoolId()));
+			temp.setHome(home);
+			list.add(temp);
+		}
+		return list;
+	}
+
+	@Override
+	public List<Board> search(String content) {
+		List<BoardEntity> entityList = boardMapper.search(content);
+		List<Board> list = new ArrayList<>();
+		for (BoardEntity b : entityList) {
+			Board temp = b.toDto();
+			HomeEntity homeEntity = homeMapper.findHomeByNum(b.getHomeNo()).get(0);
+			Home home = homeEntity.toDto();
+			home.setSchool(homeMapper.findSchool(homeEntity.getSchoolId()));
+			temp.setHome(home);
+			list.add(temp);
+		}
+		return list;
+	}
 }

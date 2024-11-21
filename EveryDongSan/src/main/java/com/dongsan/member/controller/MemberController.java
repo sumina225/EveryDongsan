@@ -81,7 +81,7 @@ public class MemberController {
 				String token = jwtTokenUtil.generateToken(member);
 				response.setHeader("Authorization", "Bearer " + token);
 
-				return ResponseEntity.ok("로그인 성공");
+				return ResponseEntity.ok(token);
 			} else {
 				return new ResponseEntity<>("잘못된 로그인 정보입니다.", HttpStatus.UNAUTHORIZED);
 			}

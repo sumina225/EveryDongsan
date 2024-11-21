@@ -11,8 +11,10 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dongsan.board.model.Board;
@@ -50,8 +52,33 @@ public class BoardController {
 		
 	}
 	
+	@PutMapping("/{articleNo}/update")
+	public ResponseEntity<?> updateBoard(@PathVariable int articleNo, @RequestBody Board board){
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		String username = authentication.getName();
+		if(boardService.updateBoard(articleNo,username,board)) {
+			return ResponseEntity.ok("수정되었습니다.");
+		}else {
+			return ResponseEntity.ok("수정권한이 없습니다");
+		}
+	}
 	// 본인이 올린글 보기
+	@GetMapping("/myList")
+	public ResponseEntity<?> myList(){
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		String username = authentication.getName();
+		return ResponseEntity.ok(boardService.myList(username));
+	}
 	
+	@GetMapping("/searchBySchool")
+	public ResponseEntity<?> searchBySchool(@RequestParam String school){
+		return ResponseEntity.ok(boardService.searchBySchool(school));
+	}
+	
+	@GetMapping("/search")
+	public ResponseEntity<?> search(@RequestParam String content){
+		return ResponseEntity.ok(boardService.search(content));
+	}
 	
 	
 

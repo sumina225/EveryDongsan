@@ -65,7 +65,8 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                 List<String> roles = jwtTokenUtil.extractRoles(token);
 
                 // "부동산" 역할 확인
-                if (!roles.contains("부동산")) {
+                String requestURI = request.getRequestURI();
+                if (requestURI.startsWith("/posts") && !roles.contains("부동산")) {
                     logger.error("필수 권한(부동산)이 없습니다.");
                     response.setStatus(HttpServletResponse.SC_FORBIDDEN);
                     response.getWriter().write("Insufficient permissions.");

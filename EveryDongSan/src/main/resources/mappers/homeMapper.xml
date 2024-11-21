@@ -27,7 +27,7 @@
 	</insert>
 
 	<select id="findHome" parameterType="homeEntity" resultType="Integer">
-		SELECT no
+		SELECT count(*)
 		FROM home
 		WHERE memberId = #{memberId} AND name = #{name}
 	</select>
@@ -43,6 +43,12 @@
 		from school
 		where schoolId = #{schoolId}
 	</select>
+	
+	<update id="updateHome" parameterType="homeEntity">
+		update home
+		set price = #{price}, rentalType = #{rentalType}
+		where no = #{no}
+	</update>
 
 
 
