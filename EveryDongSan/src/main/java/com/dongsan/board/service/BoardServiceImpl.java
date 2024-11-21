@@ -47,8 +47,9 @@ public class BoardServiceImpl implements BoardService {
 	}
 
 	@Override
-	public List<Board> listAll() {
-		List<BoardEntity> entityList = boardMapper.listAll();
+	public List<Board> listAll(int page, int size) {
+		int offset = (page-1) * size;
+		List<BoardEntity> entityList = boardMapper.listAll(offset,size);
 		List<Board> list = new ArrayList<>();
 		for (BoardEntity b : entityList) {
 			Board temp = b.toDto();
@@ -91,8 +92,9 @@ public class BoardServiceImpl implements BoardService {
 	}
 
 	@Override
-	public List<Board> myList(String username) {
-		List<BoardEntity> entityList = boardMapper.myList(username);
+	public List<Board> myList(String username, int page, int size) {
+		int offset = (page-1) * size;
+		List<BoardEntity> entityList = boardMapper.myList(username,offset,size);
 		List<Board> list = new ArrayList<>();
 		for (BoardEntity b : entityList) {
 			Board temp = b.toDto();
@@ -106,9 +108,10 @@ public class BoardServiceImpl implements BoardService {
 	}
 
 	@Override
-	public List<Board> searchBySchool(String school) {
+	public List<Board> searchBySchool(String school, int page, int size) {
+		int offset = (page-1) * size;
 		int schoolId = homeMapper.findSchoolNum(school);
-		List<BoardEntity> entityList = boardMapper.searchBySchoolId(schoolId);
+		List<BoardEntity> entityList = boardMapper.searchBySchoolId(schoolId,offset,size);
 		List<Board> list = new ArrayList<>();
 		for (BoardEntity b : entityList) {
 			Board temp = b.toDto();
@@ -122,8 +125,9 @@ public class BoardServiceImpl implements BoardService {
 	}
 
 	@Override
-	public List<Board> search(String content) {
-		List<BoardEntity> entityList = boardMapper.search(content);
+	public List<Board> search(String content, int page, int size) {
+		int offset = (page-1) * size;
+		List<BoardEntity> entityList = boardMapper.search(content,offset,size);
 		List<Board> list = new ArrayList<>();
 		for (BoardEntity b : entityList) {
 			Board temp = b.toDto();

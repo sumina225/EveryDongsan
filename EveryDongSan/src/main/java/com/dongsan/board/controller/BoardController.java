@@ -36,8 +36,8 @@ public class BoardController {
 	}
 	
 	@GetMapping("/listAll")
-	public ResponseEntity<?> listAll(){
-		return ResponseEntity.ok(boardService.listAll());
+	public ResponseEntity<?> listAll(@RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "20") int size) {
+	    return ResponseEntity.ok(boardService.listAll(page, size));
 	}
 	
 	@DeleteMapping("/{articleNo}/delete")
@@ -64,20 +64,20 @@ public class BoardController {
 	}
 	// 본인이 올린글 보기
 	@GetMapping("/myList")
-	public ResponseEntity<?> myList(){
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		String username = authentication.getName();
-		return ResponseEntity.ok(boardService.myList(username));
+	public ResponseEntity<?> myList(@RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "10") int size) {
+	    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+	    String username = authentication.getName();
+	    return ResponseEntity.ok(boardService.myList(username, page, size));
 	}
 	
 	@GetMapping("/searchBySchool")
-	public ResponseEntity<?> searchBySchool(@RequestParam String school){
-		return ResponseEntity.ok(boardService.searchBySchool(school));
+	public ResponseEntity<?> searchBySchool(@RequestParam String school, @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "10") int size) {
+	    return ResponseEntity.ok(boardService.searchBySchool(school, page, size));
 	}
 	
 	@GetMapping("/search")
-	public ResponseEntity<?> search(@RequestParam String content){
-		return ResponseEntity.ok(boardService.search(content));
+	public ResponseEntity<?> search(@RequestParam String content, @RequestParam(defaultValue = "1") int page, @RequestParam(defaultValue = "10") int size) {
+	    return ResponseEntity.ok(boardService.search(content, page, size));
 	}
 	
 	

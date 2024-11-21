@@ -34,6 +34,8 @@
 	<select id="listAll" resultType="boardEntity">
 		select *
 		from community
+		order by articleNo asc
+		limit #{limit} offset #{offset}
 	</select>
 	
 	<delete id="deleteBoard" parameterType="Integer">
@@ -66,13 +68,15 @@
 		where articleNo = #{articleNo}
 	</update>
 	
-	<select id="myList" parameterType="String">
+	<select id="myList" resultType="boardEntity">
 		select *
 		from community
 		where memberId = #{memberId}
+		order by articleNo asc
+		limit #{limit} offset #{offset}
 	</select>
 	
-	<select id="searchBySchoolId" parameterType="Integer" resultType="BoardEntity">
+	<select id="searchBySchoolId" resultType="boardEntity">
     	SELECT 
         c.articleNo AS articleNo,
         c.title AS title,
@@ -86,12 +90,16 @@
         home h ON c.homeNo = h.no
    		WHERE 
         h.schoolId = #{schoolId}
+        order by articleNo asc
+		limit #{limit} offset #{offset}
 	</select>
 	
-	<select id="search" parameterType="String" resultType="BoardEntity">
+	<select id="search" resultType="boardEntity">
     	SELECT *
     	FROM community
     	WHERE title LIKE CONCAT('%', #{content}, '%')
+    	order by articleNo asc
+		limit #{limit} offset #{offset}
 	</select>
 
 
