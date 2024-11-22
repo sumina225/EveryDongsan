@@ -45,12 +45,11 @@ CREATE TABLE `school` (
 );
 
 CREATE TABLE `review` (
-  `articleNo` INT PRIMARY KEY,
+  `articleNo` INT PRIMARY KEY AUTO_INCREMENT,
   `memberId` VARCHAR(50) NOT NULL,
   `homeNo` INT NOT NULL,
   `content` VARCHAR(2000),
-  `reviewScore` INT DEFAULT 0,
-  `hit` INT DEFAULT 0
+  `reviewScore` INT DEFAULT 0
 );
 
 CREATE TABLE `community` (

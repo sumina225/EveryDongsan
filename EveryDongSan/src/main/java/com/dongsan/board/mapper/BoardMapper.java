@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import com.dongsan.board.entity.BoardEntity;
+import com.dongsan.board.entity.ReviewEntity;
 import com.dongsan.home.entity.HomeEntity;
 
 @Mapper
@@ -25,5 +26,11 @@ public interface BoardMapper {
 	
 	int findBoard(BoardEntity board);
 	
-	
+    BoardEntity getArticle(@Param("articleNo") int articleNo); // 게시글 상세 조회
+    void incrementViewCount(@Param("articleNo") int articleNo); // 조회수 증가
+    
+    void insertReview(ReviewEntity review);
+    List<ReviewEntity> selectReviewsByHomeNo(@Param("homeNo") int homeNo, @Param("offset") int offset, @Param("limit") int limit);
+    void updateReview(ReviewEntity review);
+    void deleteReview(@Param("reviewId") int reviewId);
 }

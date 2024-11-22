@@ -101,6 +101,46 @@
     	order by articleNo asc
 		limit #{limit} offset #{offset}
 	</select>
+	
+	<select id="getArticle" resultType="boardEntity">
+		select *
+		from community
+		where articleNo = #{articleNo}
+	</select>
+	
+	<update id="incrementViewCount">
+		update community
+		set hit = hit + 1
+		where articleNo = #{articleNo}
+	</update>
+	
+	<insert id="insertReview" parameterType="reviewEntity">
+		insert
+		into review(memberId,homeNo,content,reviewScore)
+		values(#{memberId},#{homeNo},#{content},#{reviewScore})	
+	</insert>
+	
+	<select id="selectReviewsByHomeNo" resultType="reviewEntity">
+		select *
+		from review
+		where homeNo =#{homeNo}
+		order by reviewScore desc
+		limit #{limit} offset #{offset}
+	</select>
+	
+	<update id="updateReview" parameterType="reviewEntity">
+		UPDATE review
+    	SET
+        	content = #{content},
+        	reviewScore = #{reviewScore}
+    	WHERE articleNo = #{articleNo}
+	</update>
+	
+	<delete id="deleteReview">
+		delete from
+		review
+		where articleNo = #{reviewId}
+	</delete>
 
 
 

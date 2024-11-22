@@ -7,9 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.dongsan.board.entity.BoardEntity;
+import com.dongsan.board.entity.ReviewEntity;
 import com.dongsan.board.mapper.BoardMapper;
 import com.dongsan.board.mapper.HomeMapper;
 import com.dongsan.board.model.Board;
+import com.dongsan.board.model.Review;
 import com.dongsan.home.entity.HomeEntity;
 import com.dongsan.home.model.Home;
 
@@ -138,5 +140,62 @@ public class BoardServiceImpl implements BoardService {
 			list.add(temp);
 		}
 		return list;
+	}
+
+	@Override
+	public Board getArticle(int articleNo) {
+		BoardEntity boardEntity = boardMapper.getArticle(articleNo);
+		Board temp = boardEntity.toDto();
+		HomeEntity homeEntity = homeMapper.findHomeByNum(boardEntity.getHomeNo()).get(0);
+		Home home = homeEntity.toDto();
+		home.setSchool(homeMapper.findSchool(homeEntity.getSchoolId()));
+		temp.setHome(home);
+		return temp;
+	}
+
+	@Override
+	public void incrementViewCount(int articleNo) {
+		 boardMapper.incrementViewCount(articleNo);
+	}
+
+	@Override
+	public void addReview(int articleNo, Review review) {
+		ReviewEntity reviewEntity = review.toEntity();
+		reviewEntity.setHomeNo(boardMapper.findHomeNoByBoard(articleNo));
+		boardMapper.insertReview(reviewEntity);
+		
+		
+	}
+
+	@Override
+	public List<Review> getReviews(int articleNo, int page, int size) {
+		int offset = (page-1) * size;
+		System.out.println(offset + " " + page + " " + size);
+		int homeNo = boardMapper.findHomeNoByBoard(articleNo);
+		System.out.println(homeNo);
+		List<ReviewEntity> entityList = boardMapper.selectReviewsByHomeNo(homeNo,offset,size);
+		List<Review> list = new ArrayList<>();
+		int count = 1;
+		System.out.println(entityList);
+		for(ReviewEntity r : entityList) {
+			Review temp = r.toDto();
+//			temp.setNo(count++);
+			list.add(temp);
+		}
+		return list;
+	}
+
+	@Override
+	public void updateReview(int articleNo, int reviewId, Review review) {
+		ReviewEntity reviewEntity = review.toEntity();
+		reviewEntity.setArticleNo(reviewId);
+		boardMapper.updateReview(reviewEntity);
+		
+	}
+
+	@Override
+	public void deleteReview(int articleNo, int reviewId) {
+		boardMapper.deleteReview(reviewId);
+		
 	}
 }
