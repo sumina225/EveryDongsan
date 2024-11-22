@@ -38,6 +38,14 @@
 		limit #{limit} offset #{offset}
 	</select>
 	
+	<select id="listAllByStar" resultType="boardEntity">
+		select c.*
+		from community c
+		left join home h on c.homeNo = h.no
+		order by h.score desc
+		limit #{limit} offset #{offset}
+	</select>
+	
 	<delete id="deleteBoard" parameterType="Integer">
 		delete
 		from community

@@ -41,6 +41,12 @@ public class BoardController {
 			@RequestParam(defaultValue = "20") int size) {
 		return ResponseEntity.ok(boardService.listAll(page, size));
 	}
+	
+	@GetMapping("/listAllByStar")
+	public ResponseEntity<?> listAllByStar(@RequestParam(defaultValue = "1") int page,
+			@RequestParam(defaultValue = "20") int size) {
+		return ResponseEntity.ok(boardService.listAllByStar(page, size));
+	}
 
 	@GetMapping("/{articleNo}")
 	public ResponseEntity<?> getArticle(@PathVariable int articleNo) {

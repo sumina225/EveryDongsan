@@ -13,6 +13,7 @@ import com.dongsan.home.entity.HomeEntity;
 public interface BoardMapper {
 	int posts(BoardEntity board);
 	List<BoardEntity> listAll(@Param("offset") int offset, @Param("limit") int limit);
+	List<BoardEntity> listAllByStar(@Param("offset") int offset, @Param("limit") int limit);
 	List<BoardEntity> myList(@Param("memberId") String username, @Param("offset") int offset, @Param("limit") int limit);
 	List<BoardEntity> searchBySchoolId(int schoolId, @Param("offset") int offset, @Param("limit") int limit);
 	List<BoardEntity> search(@Param("content") String content, @Param("offset") int offset, @Param("limit") int limit);

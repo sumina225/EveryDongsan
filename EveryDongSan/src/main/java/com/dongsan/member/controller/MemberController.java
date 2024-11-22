@@ -68,7 +68,6 @@ public class MemberController {
 			e.printStackTrace();
 			return new ResponseEntity<>("회원가입 처리 중 오류가 발생했습니다.", HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-
 	}
 
 	@PostMapping("/login")

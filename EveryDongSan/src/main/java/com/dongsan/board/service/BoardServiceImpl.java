@@ -63,6 +63,22 @@ public class BoardServiceImpl implements BoardService {
 		}
 		return list;
 	}
+	
+	@Override
+	public List<Board> listAllByStar(int page, int size) {
+		int offset = (page-1) * size;
+		List<BoardEntity> entityList = boardMapper.listAllByStar(offset,size);
+		List<Board> list = new ArrayList<>();
+		for (BoardEntity b : entityList) {
+			Board temp = b.toDto();
+			HomeEntity homeEntity = homeMapper.findHomeByNum(b.getHomeNo()).get(0);
+			Home home = homeEntity.toDto();
+			home.setSchool(homeMapper.findSchool(homeEntity.getSchoolId()));
+			temp.setHome(home);
+			list.add(temp);
+		}
+		return list;
+	}
 
 	@Override
 	public boolean deleteBoard(int articleNo, String username) {
@@ -198,4 +214,6 @@ public class BoardServiceImpl implements BoardService {
 		boardMapper.deleteReview(reviewId);
 		
 	}
+
+	
 }

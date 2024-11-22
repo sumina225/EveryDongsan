@@ -9,6 +9,8 @@ public interface BoardService {
 	boolean posts(Board board);
 
 	List<Board> listAll(int page, int size);
+	
+	List<Board> listAllByStar(int page, int size);
 
 	boolean deleteBoard(int articleNo, String username);
 
