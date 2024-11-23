@@ -4,14 +4,16 @@
     <div id="container">
       <div class="step step1">
         <h1 class="logo">
-          <div @click="goHome">에브리동산</div>
+          <div @click="goHome">
+            <img src="../assets/mainlog.png" alt="로고">
+          </div>
         </h1>
         <div class="membership">
           <dl :class="{ ok: check === 1, error: check === 0 }">
             <dt>아이디</dt>
             <dd>
               <input
-                v-model="uid"
+                v-model="id"
                 type="text"
                 maxlength="12"
                 placeholder=""
@@ -27,7 +29,7 @@
             <dt>비밀번호</dt>
             <dd>
               <input
-                v-model="password1"
+                v-model="password"
                 type="password"
                 maxlength="16"
                 placeholder=""
@@ -57,7 +59,7 @@
             <dt>이름</dt>
             <dd>
               <input
-                v-model="userName"
+                v-model="name"
                 type="text"
                 maxlength="25"
                 placeholder=""
@@ -116,11 +118,9 @@
                   type="radio"
                   id="Student"
                   name="role"
-                  value="Student"
+                  value="학생"
                   v-model="selectedRole"
-                /><label
-                  for="Student"
-                  :class="{ on: selectedRole === 'Student' }"
+                /><label for="Student" :class="{ on: selectedRole === '학생' }"
                   ><span><em></em>학생</span></label
                 >
               </div>
@@ -129,14 +129,34 @@
                   type="radio"
                   id="Rental"
                   name="role"
-                  value="Rental"
+                  value="부동산"
                   v-model="selectedRole"
-                /><label for="Rental" :class="{ on: selectedRole === 'Rental' }"
+                /><label for="Rental" :class="{ on: selectedRole === '부동산' }"
                   ><span><em></em>부동산</span></label
                 >
               </div>
             </dd>
             <p></p>
+          </dl>
+          <dl
+            class="school"
+            :class="{ ok: checkSchool === 1, error: checkSchool === 0 }"
+          >
+            <dt>학교</dt>
+            <dd @click="openModal">
+              <input
+                v-model="school"
+                type="text"
+                name="school"
+                id="school"
+                autocomplete="off"
+                title="학교"
+                readonly
+                :class="{ filled: school }"
+              />
+              <span></span>
+            </dd>
+            <p>{{ msgSchool }}</p>
           </dl>
           <dl
             class="email"
@@ -163,12 +183,12 @@
             <dt>휴대폰</dt>
             <dd>
               <input
-                v-model="mobile"
+                v-model="tel"
                 type="text"
                 name="mobile"
                 id="phone"
                 autocomplete="off"
-                placeholder="‘-’ 없이 입력"
+                placeholder="‘-’ 입력 해주세요."
               />
               <span></span>
             </dd>
@@ -182,11 +202,77 @@
       </div>
     </div>
   </div>
+
+  <div v-if="isModalOpen" class="modal-backdrop" @click.self="closeModal">
+    <div class="modal">
+      <h2>학교 검색</h2>
+      <input
+        v-model="searchQuery"
+        type="text"
+        placeholder="학교명을 입력하세요"
+        @input="searchSchools"
+      />
+      <ul>
+        <li
+          v-for="(school, index) in filteredSchools"
+          :key="index"
+          @click="selectSchool(school.name)"
+        >
+          {{ school.name }}
+        </li>
+      </ul>
+    </div>
+  </div>
 </template>
 
 <script setup>
-import { ref, watch } from "vue";
+import { ref, watch, computed, onMounted } from "vue";
 import { useRouter } from "vue-router";
+import { useSchoolStore } from "@/stores/schoolStore";
+import apiClient from "@/axios";
+import Swal from "sweetalert2";
+
+// -------- 학교 검색  -------//
+const school = ref(""); // 선택된 학교 이름
+const searchQuery = ref(""); // 검색어
+const isModalOpen = ref(false); // 모달 열림 상태
+const schoolStore = useSchoolStore();
+const checkSchool = ref(-1); // 유효성 체크
+const msgSchool = ref(""); // 에러 메시지
+
+// Pinia 스토어에서 학교 데이터 로드
+onMounted(() => {
+  schoolStore.loadSchools(); // 스토어의 loadSchools 메서드 호출
+});
+
+// 검색된 학교 목록 필터링
+const filteredSchools = computed(() => {
+  if (!searchQuery.value.trim()) return schoolStore.schoolList.slice(0, 5);
+  console.log(schoolStore.schoolList);
+  return schoolStore.schoolList.filter((school) =>
+    school.name.includes(searchQuery.value)
+  );
+});
+
+// 모달 열기
+const openModal = () => {
+  isModalOpen.value = true;
+};
+
+// 모달 닫기
+const closeModal = () => {
+  isModalOpen.value = false;
+};
+
+// 학교 선택
+const selectSchool = (selectedSchool) => {
+  school.value = selectedSchool;
+  checkSchool.value = 1; // 유효성 체크 완료
+  msgSchool.value = "선택된 학교: " + selectedSchool;
+  isModalOpen.value = false; // 모달 닫기
+};
+
+// ----------------------------  학교 end ----------------------  //
 
 const router = useRouter();
 const selectedRole = ref("");
@@ -274,38 +360,38 @@ const _valid_byte_check = (min, max, value) => {
 
 // id 체크하는 함수들 ----------------------------------------------------------------
 
-const uid = ref("");
+const id = ref("");
 
-watch(uid, (newVal) => {
-  uidCheck();
+watch(id, (newVal) => {
+  idCheck();
 });
 
 // 아이디 체크
-const uidCheck = () => {
+const idCheck = () => {
   msgBox.value = ""; // 메세지 초기화
   check.value = -1; // 초기화 상태
 
   // 값이 비어있는지 체크
-  if (uid.value.length <= 0) {
+  if (id.value.length <= 0) {
     msgBox.value = "아이디를 입력해주세요.";
     check.value = 0;
     return;
   }
   // 한글체크
-  if (_is_hangle(uid.value)) {
+  if (_is_hangle(id.value)) {
     msgBox.value = "한글/특수문자는 사용하실 수 없습니다.";
     check.value = 0; // 에러상태
     return;
   }
 
   // 아이디 길이 체크
-  if (_valid_length_check(6, 12, uid.value)) {
+  if (_valid_length_check(6, 12, id.value)) {
     msgBox.value = "아이디의 길이는 6-12자 입니다.";
     check.value = 0; // 에러상태
     return;
   }
   //바이트 체크
-  if (_valid_byte_check(6, 12, uid.value)) {
+  if (_valid_byte_check(6, 12, id.value)) {
     msgBox.value = "아이디가 6자~12자 바이트 범위를 초과하였습니다.";
     check.value = 0;
     return;
@@ -316,12 +402,12 @@ const uidCheck = () => {
   msgBox.value = "사용할 수 있는 아이디 입니다.";
 };
 //---------------------------- id 체크하는 함수 end --------------------------- //
-const password1 = ref("");
+const password = ref("");
 const password2 = ref("");
 
 //비밀번호 체크
 
-watch(password1, (newVal) => {
+watch(password, (newVal) => {
   pwdCheck();
 });
 
@@ -330,7 +416,7 @@ watch(password2, (newVal) => {
 });
 
 const pwdCheck = () => {
-  const pwd = password1.value; // 비밀번호 입력값
+  const pwd = password.value; // 비밀번호 입력값
   msgPw.value = ""; // 메세지 초기화
   check2.value = -1; // 초기화 상태
 
@@ -368,7 +454,7 @@ const pwdCheck = () => {
 };
 
 const pwdCheck2 = () => {
-  const pwd = password1.value;
+  const pwd = password.value;
   const pwdConfirm = password2.value;
   check3.value = -1;
   msgPw2.value = "";
@@ -385,25 +471,25 @@ const pwdCheck2 = () => {
 //-------------------------------- 비밀번호 체크 end --------------------------//
 
 //---------------- 이름 체크 start --------------------- //
-const userName = ref("");
+const name = ref("");
 
-watch(userName, (newVal) => {
+watch(name, (newVal) => {
   nameCheck();
 });
 
 const nameCheck = () => {
-  const name = userName.value;
+  const username = name.value;
 
   checkName.value = -1; // 초기화
   msgName.value = "";
 
-  if (name.length <= 0) {
+  if (username.length <= 0) {
     checkName.value = 0;
     msgName.value = "이름을 입력해주세요.";
     return;
   }
 
-  if (!_valid_name_check(name)) {
+  if (!_valid_name_check(username)) {
     checkName.value = 0;
     msgName.value = "이름을 정확히 입력해주세요.(특수문자,숫자,공백 입력 불가)";
     return;
@@ -433,6 +519,52 @@ const birthCheck = () => {
     checkBirth.value = 0;
     return;
   }
+  const nextStep = async () => {
+    // 유효성 체크
+    if (
+      check.value !== 1 ||
+      check2.value !== 1 ||
+      check3.value !== 1 ||
+      checkName.value !== 1 ||
+      checkEmail.value !== 1 ||
+      checkPhone.value !== 1 ||
+      checkSchool.value !== 1
+    ) {
+      alert("모든 필드를 올바르게 입력해주세요.");
+      return;
+    }
+
+    // 입력된 데이터를 객체로 수집
+    const memberData = {
+      id: id.value,
+      password: password.value,
+      name: name.value,
+      emailId: email.value.split("@")[0],
+      emailDomain: email.value.split("@")[1],
+      tel: tel.value,
+      role: selectedRole.value,
+      school: school.value,
+    };
+
+    try {
+      const response = await apiClient.post("/member/signup", memberData);
+
+      if (response.status === 200) {
+        alert("회원가입이 완료되었습니다!");
+        router.push("/");
+      } else {
+        alert(
+          `회원가입 실패: ${response.data.message || "오류가 발생했습니다."}`
+        );
+      }
+    } catch (error) {
+      console.error(
+        "회원가입 요청 중 오류 발생:",
+        error.response?.data || error.message
+      );
+      alert("회원가입 중 오류가 발생했습니다. 다시 시도해주세요.");
+    }
+  };
 
   // 숫자만 입력 확인
   if (!/^\d{8}$/.test(value)) {
@@ -506,11 +638,11 @@ const EmailCheck = () => {
 };
 
 // ---------------------------------- 휴대폰 번호 체크 ---------------------- //
-const mobile = ref("");
+const tel = ref("");
 const checkPhone = ref(-1);
 const msgPhone = ref("");
 
-watch(mobile, (newVal) => {
+watch(tel, (newVal) => {
   PhoneCheck();
 });
 
@@ -519,7 +651,7 @@ const PhoneCheck = () => {
   msgPhone.value = ""; // 메세지 초기화
   checkPhone.value = -1; // 초기화 상태
 
-  const number = mobile.value.trim();
+  const number = tel.value.trim();
 
   // 번호가 비어있는지 체크
   if (number.length <= 0) {
@@ -529,9 +661,9 @@ const PhoneCheck = () => {
   }
 
   // 010, 011, 019 등으로 시작하는지 확인
-  const phoneRegex = /^(01[0-9])(\d{7,8})$/; // 한국의 휴대폰 번호 형식에 맞는 정규식
+  const phoneRegex = /^01[0-9]{1}-[0-9]{3,4}-[0-9]{4}$/; // 한국의 휴대폰 번호 형식에 맞는 정규식
   if (!phoneRegex.test(number)) {
-    msgPhone.value = "올바른 휴대폰 번호를 입력해주세요.";
+    msgPhone.value = "올바른 휴대폰 번호를 입력해주세요. ex(01x-1xxx-2xxx)";
     checkPhone.value = 0;
     return;
   }
@@ -543,14 +675,62 @@ const PhoneCheck = () => {
 //-------------------------------- 입력부분 체크 END ------ //
 
 // 다음 단계로 이동하는 함수
-const nextStep = () => {
-  // 현재 단계에서 부모로 'next-step' 이벤트를 발생시킴
-  // 이를 통해 부모 컴포넌트에서 처리할 수 있도록 함
-  console.log("다음 단계로 이동");
-};
+const nextStep = async () => {
+  // 유효성 체크
+  if (
+    check.value !== 1 ||
+    check2.value !== 1 ||
+    check3.value !== 1 ||
+    checkName.value !== 1 ||
+    checkEmail.value !== 1 ||
+    checkPhone.value !== 1 ||
+    checkSchool.value !== 1
+  ) {
+    alert("모든 필드를 올바르게 입력해주세요.");
+    return;
+  }
 
-const goHome = () => {
-  router.push("/");
+  // 입력된 데이터를 객체로 수집
+  const memberData = {
+    id: id.value,
+    password: password.value,
+    name: name.value,
+    emailId: email.value.split("@")[0],
+    emailDomain: email.value.split("@")[1],
+    tel: tel.value,
+    role: selectedRole.value,
+    school: school.value,
+  };
+
+  try {
+    const response = await apiClient.post("/member/signup", memberData);
+
+    if (response.status === 201) {
+      Swal.fire({
+        icon: "success",
+        title: "회원가입 완료",
+        text: response.data, // 서버에서 반환한 메시지 표시
+        confirmButtonText: "확인",
+      });
+      router.push("/");
+    }
+  } catch (error) {
+    if (error.response && error.response.data) {
+      Swal.fire({
+        icon: "error",
+        title: "회원가입 실패",
+        text: error.response.data, // 서버에서 반환한 오류 메시지
+        confirmButtonText: "다시 시도",
+      });
+    } else {
+      Swal.fire({
+        icon: "error",
+        title: "예상치 못한 오류",
+        text: "회원가입 중 문제가 발생했습니다. 다시 시도해주세요.",
+        confirmButtonText: "확인",
+      });
+    }
+  }
 };
 </script>
 
@@ -566,7 +746,7 @@ html {
   background-color: #f5f5f5; /* 배경 색 설정 */
 }
 
-header {
+.header {
   height: 50px;
 }
 
@@ -598,8 +778,15 @@ div {
 /* 로고 스타일 */
 .logo {
   width: 100%;
-  height: 50px;
+  height: 130px;
   text-align: center;
+  margin-top: -10px;
+}
+
+.logo img{
+  width: 80%;
+  height: 130px;
+  
 }
 
 .logo a {
@@ -618,6 +805,7 @@ div {
 
 .step1 {
   background-color: #fffefe;
+  margin-top: 10px;
 }
 
 .step h1 {
@@ -810,5 +998,80 @@ div {
 
 .btn_wrap a:hover {
   background-color: #df5668;
+}
+
+/* 모달 디자인 / 학교  */
+
+.membership .school dd input {
+  border: 1px solid #bbb;
+  border-radius: 4px;
+  box-sizing: border-box;
+  display: block;
+  outline: None;
+  text-indent: 15px;
+  padding: 15px 0;
+  width: 100%;
+  font-size: 14px;
+  background-color: white;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.membership dl.school dd input.filled {
+  background-color: #f2f2f2; /* 회색 배경 */
+  cursor: not-allowed;
+}
+
+.modal {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 400px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+  animation: fadeIn 0.3s ease-in-out; /* 부드러운 등장 애니메이션 */
+}
+
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.5); /* 반투명 배경 */
+  display: flex;
+  justify-content: center; /* 가로 정중앙 */
+  align-items: center; /* 세로 정중앙 */
+  z-index: 1000; /* 모달 위에 표시 */
+}
+
+.modal h2 {
+  margin-bottom: 16px;
+}
+
+.modal input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 16px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.modal ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.modal li {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.modal li:hover {
+  background-color: #f2f2f2;
 }
 </style>

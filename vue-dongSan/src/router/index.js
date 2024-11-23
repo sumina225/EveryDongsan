@@ -4,6 +4,10 @@ import LoginView from "../views/LoginView.vue";
 import SignUpView from "@/views/SignUpView.vue";
 import FindView from "@/views/FindIdPwView.vue";
 import SearchMapView from "@/views/SearchMapView.vue";
+import MyPageView from "@/views/MyPageView.vue";
+import BoardStudentView from "../views/BoardStudentView.vue";
+import BoardAllView from "@/views/BoardAllView.vue";
+import RegisterView from "@/views/RegisterView.vue";
 // import SignUp from "@/views/SignUp.vue";
 
 const routes = [
@@ -26,6 +30,22 @@ const routes = [
   {
     path: "/searchMap",
     component: SearchMapView,
+  },
+  {
+    path: "/myPage",
+    component: MyPageView,
+  },
+  {
+    path: "/board",
+    component: BoardAllView,
+  },
+  {
+    path: "/board/Student",
+    component: BoardStudentView,
+  },
+  {
+    path: "/board/register",
+    component: RegisterView,
   },
 ];
 

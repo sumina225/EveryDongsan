@@ -29,12 +29,7 @@
             <button type="submit">아이디 찾기</button>
           </form>
 
-          <div v-if="foundId">
-            <p>찾은 아이디: {{ foundId }}</p>
-          </div>
-          <div v-if="errorMsg">
-            <p style="color: red">{{ errorMsg }}</p>
-          </div>
+          
         </div>
 
         <!-- 비밀번호 찾기 화면 -->
@@ -54,12 +49,7 @@
             <button type="submit">비밀번호 찾기</button>
           </form>
 
-          <div v-if="foundEmail">
-            <p>비밀번호를 {{ foundEmail }}에 발송했습니다.</p>
-          </div>
-          <div v-if="errorMsg2">
-            <p style="color: red">{{ errorMsg2 }}</p>
-          </div>
+          
         </div>
       </div>
     </div>
@@ -68,34 +58,82 @@
 
 <script setup>
 import { ref } from "vue";
-import { useUserStore } from "@/stores/useUserStore";
+import Swal from "sweetalert2";
+import apiClient from "@/axios";
 
 // 사용자 입력값을 관리하는 변수
 const userId = ref("");
 const email = ref("");
 const activeTab = ref("id"); // 'id'와 'password' 탭을 관리하는 변수
-const userStore = useUserStore();
-const { foundId, errorMsg, errorMsg2, foundEmail, findIdByEmail, findPwById } =
-  userStore;
 
 // 아이디 찾기 요청 처리 함수
-const handleSubmit = () => {
+const handleSubmit = async () => {
   if (!email.value) {
-    userStore.errorMsg = "이메일을 입력해주세요.";
+    Swal.fire({
+      icon: "warning",
+      title: "입력 오류",
+      text: "이메일을 입력해주세요.",
+    });
     return;
   }
 
-  findIdByEmail(email.value); // 이메일로 아이디 찾기
+  try {
+    const response = await apiClient.get("/member/findId", {
+      params: { emailId: email.value.split("@")[0], emailDomain: email.value.split("@")[1] },
+    });
+
+    if (response.status === 200) {
+      Swal.fire({
+        icon: "success",
+        title: "아이디 찾기 성공",
+        text: `찾은 아이디: ${response.data}`,
+      });
+    } else {
+      Swal.fire({
+        icon: "error",
+        title: "아이디 찾기 실패",
+        text: "해당 이메일로 생성된 계정이 존재하지 않습니다.",
+      });
+    }
+  } catch (error) {
+    Swal.fire({
+      icon: "error",
+      title: "오류 발생",
+      text: "아이디 찾기 중 문제가 발생했습니다. 다시 시도해주세요.",
+    });
+    console.error(error);
+  }
 };
 
 // 비밀번호 찾기 요청 처리 함수
-const handleSubmit2 = () => {
+const handleSubmit2 = async () => {
   if (!userId.value) {
-    userStore.errorMsg2 = "존재하지 않는 아이디입니다.";
+    Swal.fire({
+      icon: "warning",
+      title: "입력 오류",
+      text: "아이디를 입력해주세요.",
+    });
     return;
   }
 
-  userStorefindPwById(userId.value); // 아이디로 이메일 찾기
+  try {
+    const response = await apiClient.post("/member/findPw", {
+      email: userId.value, // 이메일 기반으로 찾는 로직
+    });
+
+    Swal.fire({
+      icon: "success",
+      title: "비밀번호 찾기 성공",
+      text: "임시 비밀번호가 이메일로 발송되었습니다.",
+    });
+  } catch (error) {
+    Swal.fire({
+      icon: "error",
+      title: "비밀번호 찾기 실패",
+      text: "아이디가 존재하지 않거나 이메일 발송에 실패했습니다.",
+    });
+    console.error(error);
+  }
 };
 </script>
 
