@@ -143,5 +143,43 @@ public class BoardController {
 			@RequestParam(defaultValue = "20") int size) {
 		return ResponseEntity.ok(boardService.search(content, page, size));
 	}
+	
+	//학생 글 보기
+	@GetMapping("/studentListAll")
+	public ResponseEntity<?> studentListAll(@RequestParam(defaultValue = "1") int page,
+			@RequestParam(defaultValue = "20") int size) {
+		return ResponseEntity.ok(boardService.studentListAll(page, size));
+	}
+	
+	@GetMapping("/studentSearchBySchool")
+	public ResponseEntity<?> studentSearchBySchool(@RequestParam String school, @RequestParam(defaultValue = "1") int page,
+			@RequestParam(defaultValue = "20") int size) {
+		return ResponseEntity.ok(boardService.studentSearchBySchool(school, page, size));
+	}
+
+	@GetMapping("/studentSearch")
+	public ResponseEntity<?> studentSearch(@RequestParam String content, @RequestParam(defaultValue = "1") int page,
+			@RequestParam(defaultValue = "20") int size) {
+		return ResponseEntity.ok(boardService.studentSearch(content, page, size));
+	}
+	
+	// 부동산 글만 보기
+	@GetMapping("/rentalListAll")
+	public ResponseEntity<?> rentalListAll(@RequestParam(defaultValue = "1") int page,
+			@RequestParam(defaultValue = "20") int size) {
+		return ResponseEntity.ok(boardService.rentalListAll(page, size));
+	}
+	
+	@GetMapping("/rentalSearchBySchool")
+	public ResponseEntity<?> rentalSearchBySchool(@RequestParam String school, @RequestParam(defaultValue = "1") int page,
+			@RequestParam(defaultValue = "20") int size) {
+		return ResponseEntity.ok(boardService.rentalSearchBySchool(school, page, size));
+	}
+
+	@GetMapping("/rentalSearch")
+	public ResponseEntity<?> rentalSearch(@RequestParam String content, @RequestParam(defaultValue = "1") int page,
+			@RequestParam(defaultValue = "20") int size) {
+		return ResponseEntity.ok(boardService.rentalSearch(content, page, size));
+	}
 
 }

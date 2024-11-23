@@ -9,7 +9,7 @@ CREATE TABLE `home` (
     `longitude` DECIMAL(9, 6),                  -- 경도
     `area` DECIMAL(10, 2),                      -- 면적
     `category` VARCHAR(50),                     -- 분류 (예: 아파트, 원룸, 오피스텔)
-    `price` INT,                                -- 가격
+    `price` VARCHAR(100),                                -- 가격
     `rentalType` VARCHAR(10),                   -- 전월세 여부
     `memberId` VARCHAR(50),                     -- 부동산업자(브로커) ID (member 테이블 참조)
     `schoolId` INT,

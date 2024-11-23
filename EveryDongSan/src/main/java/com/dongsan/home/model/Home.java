@@ -20,7 +20,7 @@ public class Home {
 	private BigDecimal longitude;
 	private BigDecimal area;
 	private String category;
-	private int price;
+	private String price;
 	private String rentalType;
 	private String memberId;
 	private String school;

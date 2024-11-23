@@ -20,7 +20,7 @@ public class HomeEntity {
 	private BigDecimal longitude;
 	private BigDecimal area;
 	private String category;
-	private int price;
+	private String price;
 	private String rentalType;
 	private String memberId;
 	private int schoolId;
@@ -40,6 +40,6 @@ public class HomeEntity {
 				.rentalType(rentalType)
 				.memberId(memberId)
 				.score(score)
-				.build();
+				.build(); 
 	}
 }

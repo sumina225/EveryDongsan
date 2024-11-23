@@ -4,151 +4,254 @@
 
 <mapper namespace="com.dongsan.board.mapper.BoardMapper">
 	<!-- BoardEntity와 HomeEntity를 매핑하는 resultMap -->
-	<!-- <resultMap id="boardResultMap" type="com.dongsan.board.entity.BoardEntity">
-		<id property="articleNo" column="article_no" />
-		<result property="title" column="title" />
-		<result property="content" column="content" />
-		<result property="hit" column="hit" />
-
-		homeNo를 사용해 HomeEntity와 매핑
-		<association property="home" column="home_no" javaType="com.dongsan.home.entity.HomeEntity">
-			<result property="no" column="home_no" />
-			<result property="name" column="home_name" />
-			<result property="latitude" column="home_latitude" />
-			<result property="longitude" column="home_longitude" />
-			<result property="area" column="home_area" />
-			<result property="category" column="home_category" />
-			<result property="price" column="home_price" />
-			<result property="rentalType" column="home_rental_type" />
-			<result property="memberId" column="home_member_id" />
-			<result property="schoolId" column="home_school_id" />
-			<result property="score" column="home_score" />
-		</association>
-	</resultMap>
- -->
-	<insert id="posts" parameterType="com.dongsan.board.entity.BoardEntity">
-		INSERT INTO community (title, memberId, homeNo, content, hit)
+	<!-- <resultMap id="boardResultMap" type="com.dongsan.board.entity.BoardEntity"> 
+		<id property="articleNo" column="article_no" /> <result property="title" 
+		column="title" /> <result property="content" column="content" /> <result 
+		property="hit" column="hit" /> homeNo를 사용해 HomeEntity와 매핑 <association property="home" 
+		column="home_no" javaType="com.dongsan.home.entity.HomeEntity"> <result property="no" 
+		column="home_no" /> <result property="name" column="home_name" /> <result 
+		property="latitude" column="home_latitude" /> <result property="longitude" 
+		column="home_longitude" /> <result property="area" column="home_area" /> 
+		<result property="category" column="home_category" /> <result property="price" 
+		column="home_price" /> <result property="rentalType" column="home_rental_type" 
+		/> <result property="memberId" column="home_member_id" /> <result property="schoolId" 
+		column="home_school_id" /> <result property="score" column="home_score" /> 
+		</association> </resultMap> -->
+	<insert id="posts"
+		parameterType="com.dongsan.board.entity.BoardEntity">
+		INSERT INTO community (title, memberId, homeNo, content,
+		hit)
 		VALUES (#{title}, #{memberId}, #{homeNo}, #{content}, #{hit})
 	</insert>
-	
+
 	<select id="listAll" resultType="boardEntity">
 		select *
 		from community
-		order by articleNo asc
+		order by
+		articleNo asc
 		limit #{limit} offset #{offset}
 	</select>
-	
+
 	<select id="listAllByStar" resultType="boardEntity">
 		select c.*
 		from community c
 		left join home h on c.homeNo = h.no
 		order by h.score desc
-		limit #{limit} offset #{offset}
+		limit #{limit}
+		offset #{offset}
 	</select>
-	
+
 	<delete id="deleteBoard" parameterType="Integer">
 		delete
 		from community
 		where articleNo = #{articleNo}
 	</delete>
-	
-	<select id="findMemberIdByBoard" parameterType="Integer" resultType="String">
+
+	<select id="findMemberIdByBoard" parameterType="Integer"
+		resultType="String">
 		select memberId
 		from community
 		where articleNo = #{articleNo}
 	</select>
-	
-	<select id="findHomeNoByBoard" parameterType="Integer" resultType="Integer">
+
+	<select id="findHomeNoByBoard" parameterType="Integer"
+		resultType="Integer">
 		select homeNo
 		from community
 		where articleNo = #{articleNo}
 	</select>
-	
-	<select id="findBoard" parameterType="boardEntity" resultType="Integer">
+
+	<select id="findBoard" parameterType="boardEntity"
+		resultType="Integer">
 		select count(*)
 		from community
-		where memberId = #{memberId} and title = #{title}
+		where memberId = #{memberId}
+		and title = #{title}
 	</select>
-	
+
 	<update id="updateBoard" parameterType="boardEntity">
 		update community
-		set title=#{title}, content=#{content}
+		set
+		title=#{title}, content=#{content}
 		where articleNo = #{articleNo}
 	</update>
-	
+
 	<select id="myList" resultType="boardEntity">
 		select *
 		from community
-		where memberId = #{memberId}
+		where
+		memberId = #{memberId}
+		order by articleNo asc
+		limit #{limit} offset
+		#{offset}
+	</select>
+
+	<select id="searchBySchoolId" resultType="boardEntity">
+		SELECT
+		c.articleNo AS articleNo,
+		c.title AS title,
+		c.homeNo AS homeNo,
+		c.memberId AS memberId,
+		c.content AS content,
+		c.hit AS hit
+		FROM
+		community c
+		JOIN
+		home h ON c.homeNo = h.no
+		WHERE
+		h.schoolId = #{schoolId}
 		order by articleNo asc
 		limit #{limit} offset #{offset}
 	</select>
-	
-	<select id="searchBySchoolId" resultType="boardEntity">
-    	SELECT 
-        c.articleNo AS articleNo,
-        c.title AS title,
-        c.homeNo AS homeNo,
-        c.memberId AS memberId,
-        c.content AS content,
-        c.hit AS hit
-    	FROM 
-        community c
-    	JOIN 
-        home h ON c.homeNo = h.no
-   		WHERE 
-        h.schoolId = #{schoolId}
-        order by articleNo asc
-		limit #{limit} offset #{offset}
-	</select>
-	
+
 	<select id="search" resultType="boardEntity">
-    	SELECT *
-    	FROM community
-    	WHERE title LIKE CONCAT('%', #{content}, '%')
-    	order by articleNo asc
+		SELECT *
+		FROM community
+		WHERE title LIKE CONCAT('%', #{content}, '%')
+		order by articleNo asc
 		limit #{limit} offset #{offset}
 	</select>
-	
+
 	<select id="getArticle" resultType="boardEntity">
 		select *
 		from community
-		where articleNo = #{articleNo}
+		where
+		articleNo = #{articleNo}
 	</select>
-	
+
 	<update id="incrementViewCount">
 		update community
 		set hit = hit + 1
-		where articleNo = #{articleNo}
+		where articleNo =
+		#{articleNo}
 	</update>
-	
+
 	<insert id="insertReview" parameterType="reviewEntity">
 		insert
-		into review(memberId,homeNo,content,reviewScore)
-		values(#{memberId},#{homeNo},#{content},#{reviewScore})	
+		into
+		review(memberId,homeNo,content,reviewScore)
+		values(#{memberId},#{homeNo},#{content},#{reviewScore})
 	</insert>
-	
+
 	<select id="selectReviewsByHomeNo" resultType="reviewEntity">
 		select *
-		from review
+		from
+		review
 		where homeNo =#{homeNo}
 		order by reviewScore desc
-		limit #{limit} offset #{offset}
+		limit #{limit}
+		offset #{offset}
 	</select>
-	
+
 	<update id="updateReview" parameterType="reviewEntity">
 		UPDATE review
-    	SET
-        	content = #{content},
-        	reviewScore = #{reviewScore}
-    	WHERE articleNo = #{articleNo}
+		SET
+		content = #{content},
+		reviewScore = #{reviewScore}
+		WHERE articleNo = #{articleNo}
 	</update>
-	
+
 	<delete id="deleteReview">
 		delete from
 		review
 		where articleNo = #{reviewId}
 	</delete>
+
+	<select id="studentListAll" resultType="boardEntity">
+		SELECT c.*
+		FROM community c
+		JOIN member m ON c.memberId = m.id
+		WHERE m.role = '학생'
+		ORDER BY c.articleNo ASC
+		LIMIT #{limit} OFFSET #{offset}
+	</select>
+
+	<select id="studentSearchBySchoolId" resultType="boardEntity">
+		SELECT
+		c.articleNo AS articleNo,
+		c.title AS title,
+		c.homeNo AS homeNo,
+		c.memberId AS memberId,
+		c.content AS content,
+		c.hit AS hit
+		FROM
+		community c
+		JOIN
+		home h ON c.homeNo = h.no
+		JOIN
+		member m ON c.memberId = m.id
+		WHERE
+		h.schoolId = #{schoolId}
+		AND m.role = '학생'
+		ORDER BY
+		c.articleNo ASC
+		LIMIT
+		#{limit} OFFSET #{offset}
+	</select>
+
+	<select id="studentSearch" resultType="boardEntity">
+    SELECT 
+        c.*
+    FROM 
+        community c
+    JOIN 
+        member m ON c.memberId = m.id
+    WHERE 
+        c.title LIKE CONCAT('%', #{content}, '%')
+        AND m.role = '학생'
+    ORDER BY 
+        c.articleNo ASC
+    LIMIT 
+        #{limit} OFFSET #{offset}
+	</select>
+	
+	<select id="rentalListAll" resultType="boardEntity">
+		SELECT c.*
+		FROM community c
+		JOIN member m ON c.memberId = m.id
+		WHERE m.role = '부동산'
+		ORDER BY c.articleNo ASC
+		LIMIT #{limit} OFFSET #{offset}
+	</select>
+
+	<select id="rentalSearchBySchoolId" resultType="boardEntity">
+		SELECT
+		c.articleNo AS articleNo,
+		c.title AS title,
+		c.homeNo AS homeNo,
+		c.memberId AS memberId,
+		c.content AS content,
+		c.hit AS hit
+		FROM
+		community c
+		JOIN
+		home h ON c.homeNo = h.no
+		JOIN
+		member m ON c.memberId = m.id
+		WHERE
+		h.schoolId = #{schoolId}
+		AND m.role = '부동산'
+		ORDER BY
+		c.articleNo ASC
+		LIMIT
+		#{limit} OFFSET #{offset}
+	</select>
+
+	<select id="rentalSearch" resultType="boardEntity">
+    SELECT 
+        c.*
+    FROM 
+        community c
+    JOIN 
+        member m ON c.memberId = m.id
+    WHERE 
+        c.title LIKE CONCAT('%', #{content}, '%')
+        AND m.role = '부동산'
+    ORDER BY 
+        c.articleNo ASC
+    LIMIT 
+        #{limit} OFFSET #{offset}
+	</select>
 
 
 

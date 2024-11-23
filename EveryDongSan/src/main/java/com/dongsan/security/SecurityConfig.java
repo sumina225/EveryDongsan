@@ -29,7 +29,7 @@ public class SecurityConfig {
         http.csrf().disable()
             .authorizeHttpRequests()
             .requestMatchers("/member/signup", "/member/login", "/member/findId", "/member/findPw").permitAll()
-            .requestMatchers(HttpMethod.POST, "/posts").hasAuthority("부동산")
+//            .requestMatchers(HttpMethod.POST, "/posts").hasAuthority("부동산")
             .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
             .anyRequest().authenticated()
             .and()

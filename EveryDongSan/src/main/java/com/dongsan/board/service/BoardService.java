@@ -31,4 +31,12 @@ public interface BoardService {
     List<Review> getReviews(int articleNo, int page, int size);
     void updateReview(int articleNo, int reviewId, Review review);
     void deleteReview(int articleNo, int reviewId);
+
+	List<Board> studentListAll(int page, int size);
+	List<Board> studentSearchBySchool(String school, int page, int size);
+	List<Board> studentSearch(String content, int page, int size);
+	
+	List<Board> rentalListAll(int page, int size);
+	List<Board> rentalSearchBySchool(String school, int page, int size);
+	List<Board> rentalSearch(String content, int page, int size);
 }

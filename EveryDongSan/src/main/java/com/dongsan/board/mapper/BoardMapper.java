@@ -17,6 +17,12 @@ public interface BoardMapper {
 	List<BoardEntity> myList(@Param("memberId") String username, @Param("offset") int offset, @Param("limit") int limit);
 	List<BoardEntity> searchBySchoolId(int schoolId, @Param("offset") int offset, @Param("limit") int limit);
 	List<BoardEntity> search(@Param("content") String content, @Param("offset") int offset, @Param("limit") int limit);
+	List<BoardEntity> studentListAll(@Param("offset") int offset, @Param("limit") int limit);
+	List<BoardEntity> studentSearchBySchoolId(int schoolId, @Param("offset") int offset, @Param("limit") int limit);
+	List<BoardEntity> studentSearch(@Param("content") String content, @Param("offset") int offset, @Param("limit") int limit);
+	List<BoardEntity> rentalListAll(@Param("offset") int offset, @Param("limit") int limit);
+	List<BoardEntity> rentalSearchBySchoolId(int schoolId, @Param("offset") int offset, @Param("limit") int limit);
+	List<BoardEntity> rentalSearch(@Param("content") String content, @Param("offset") int offset, @Param("limit") int limit);
 	
 	void deleteBoard(int articleNo);
 	void updateBoard(BoardEntity boardEntity);

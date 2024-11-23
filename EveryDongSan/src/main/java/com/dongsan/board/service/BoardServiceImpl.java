@@ -215,5 +215,103 @@ public class BoardServiceImpl implements BoardService {
 		
 	}
 
+	@Override
+	public List<Board> studentListAll(int page, int size) {
+		int offset = (page-1) * size;
+		List<BoardEntity> entityList = boardMapper.studentListAll(offset,size);
+		List<Board> list = new ArrayList<>();
+		for (BoardEntity b : entityList) {
+			Board temp = b.toDto();
+			HomeEntity homeEntity = homeMapper.findHomeByNum(b.getHomeNo()).get(0);
+			Home home = homeEntity.toDto();
+			home.setSchool(homeMapper.findSchool(homeEntity.getSchoolId()));
+			temp.setHome(home);
+			list.add(temp);
+		}
+		return list;
+	}
+
+	@Override
+	public List<Board> studentSearchBySchool(String school, int page, int size) {
+		int offset = (page-1) * size;
+		int schoolId = homeMapper.findSchoolNum(school);
+		List<BoardEntity> entityList = boardMapper.studentSearchBySchoolId(schoolId,offset,size);
+		List<Board> list = new ArrayList<>();
+		for (BoardEntity b : entityList) {
+			Board temp = b.toDto();
+			HomeEntity homeEntity = homeMapper.findHomeByNum(b.getHomeNo()).get(0);
+			Home home = homeEntity.toDto();
+			home.setSchool(homeMapper.findSchool(homeEntity.getSchoolId()));
+			temp.setHome(home);
+			list.add(temp);
+		}
+		return list;
+	}
+
+	@Override
+	public List<Board> studentSearch(String content, int page, int size) {
+		int offset = (page-1) * size;
+		List<BoardEntity> entityList = boardMapper.studentSearch(content,offset,size);
+		List<Board> list = new ArrayList<>();
+		for (BoardEntity b : entityList) {
+			Board temp = b.toDto();
+			HomeEntity homeEntity = homeMapper.findHomeByNum(b.getHomeNo()).get(0);
+			Home home = homeEntity.toDto();
+			home.setSchool(homeMapper.findSchool(homeEntity.getSchoolId()));
+			temp.setHome(home);
+			list.add(temp);
+		}
+		return list;
+	}
+
+	@Override
+	public List<Board> rentalListAll(int page, int size) {
+		int offset = (page-1) * size;
+		List<BoardEntity> entityList = boardMapper.rentalListAll(offset,size);
+		List<Board> list = new ArrayList<>();
+		for (BoardEntity b : entityList) {
+			Board temp = b.toDto();
+			HomeEntity homeEntity = homeMapper.findHomeByNum(b.getHomeNo()).get(0);
+			Home home = homeEntity.toDto();
+			home.setSchool(homeMapper.findSchool(homeEntity.getSchoolId()));
+			temp.setHome(home);
+			list.add(temp);
+		}
+		return list;
+	}
+
+	@Override
+	public List<Board> rentalSearchBySchool(String school, int page, int size) {
+		int offset = (page-1) * size;
+		int schoolId = homeMapper.findSchoolNum(school);
+		List<BoardEntity> entityList = boardMapper.rentalSearchBySchoolId(schoolId,offset,size);
+		List<Board> list = new ArrayList<>();
+		for (BoardEntity b : entityList) {
+			Board temp = b.toDto();
+			HomeEntity homeEntity = homeMapper.findHomeByNum(b.getHomeNo()).get(0);
+			Home home = homeEntity.toDto();
+			home.setSchool(homeMapper.findSchool(homeEntity.getSchoolId()));
+			temp.setHome(home);
+			list.add(temp);
+		}
+		return list;
+	}
+
+	@Override
+	public List<Board> rentalSearch(String content, int page, int size) {
+		int offset = (page-1) * size;
+		List<BoardEntity> entityList = boardMapper.rentalSearch(content,offset,size);
+		List<Board> list = new ArrayList<>();
+		for (BoardEntity b : entityList) {
+			Board temp = b.toDto();
+			HomeEntity homeEntity = homeMapper.findHomeByNum(b.getHomeNo()).get(0);
+			Home home = homeEntity.toDto();
+			home.setSchool(homeMapper.findSchool(homeEntity.getSchoolId()));
+			temp.setHome(home);
+			list.add(temp);
+		}
+		return list;
+	}
+
 	
 }
