@@ -267,7 +267,7 @@
 
     // 폼 제출 처리
     const submitPost = async () => {
-        const postStore = usePostStore(); // Pinia 스토어 연결
+        const registerStore = usePostStore(); // Pinia 스토어 연결
 
         // 거래 유형에 따른 데이터 구성
         const postData = {
@@ -323,7 +323,7 @@
         }
 
         // Pinia 스토어를 통해 서버 요청
-        const result = await postStore.submitPost(postData);
+        const result = await registerStore.submitPost(postData);
 
         if (result.success) {
             Swal.fire("등록 완료", result.message, "success");
@@ -456,7 +456,6 @@
     .membership dl.radio_select div {
         position: relative;
         width: 50%;
-
         float: left;
         display: inline-block;
         text-align: center;

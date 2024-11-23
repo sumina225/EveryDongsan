@@ -1,49 +1,73 @@
 <template>
-  <div class="card">
-    <img :src="post.image" :alt="post.title" />
-    <h4>{{ post.title }}</h4>
-    <p>{{ post.description }}</p>
+  <div v-if="post" class="post-card" @click="openPost">
+    <div class="image-wrapper">
+      <img src="https://via.placeholder.com/150" alt="게시물 이미지" />
+    </div>
+    <div class="content-wrapper">
+      <h4 class="title">{{ post.title }}</h4>
+      <p class="description">{{ post.content }}</p>
+      <div class="info">
+        <span>{{ post.home.category }}</span>
+        <span>{{ post.home.rentalType }}: {{ post.home.price }}만원</span>
+        <span>{{ post.home.school }}</span>
+        <span>⭐ {{ post.home.score }}</span>
+      </div>
+    </div>
   </div>
+  <div v-else>데이터를 불러오는 중입니다...</div>
 </template>
 
 <script setup>
-defineProps({
+import { useBoardStore } from "@/stores/useBoardStore";
+
+const props = defineProps({
   post: {
     type: Object,
-    required: true,
+    required: true, // 반드시 필요
   },
 });
+
+const postStore = useBoardStore();
+const openPost = () => {
+  console.log("post selected:",props.post); 
+}
 </script>
 
 <style scoped>
-.card {
+.post-card {
+  display: flex;
+  flex-direction: column;
   border: 1px solid #ddd;
   border-radius: 8px;
-  padding: 16px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  text-align: center;
-  transition: transform 0.3s;
+  overflow: hidden;
+  cursor: pointer;
+  transition: transform 0.3s ease;
 }
-
-.card img {
+.post-card:hover {
+  transform: scale(1.03);
+}
+.image-wrapper img {
   width: 100%;
-  height: auto;
-  border-radius: 8px;
+  height: 200px;
+  object-fit: cover;
 }
-
-.card h4 {
-  margin-top: 8px;
-  font-size: 1.1rem;
-  color: #333;
+.content-wrapper {
+  padding: 12px;
 }
-
-.card p {
-  margin-top: 4px;
-  font-size: 0.9rem;
-  color: #666;
+.title {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 8px;
 }
-
-.card:hover {
-  transform: scale(1.05);
+.description {
+  font-size: 14px;
+  color: #555;
+  margin-bottom: 12px;
+}
+.info {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: #777;
 }
 </style>

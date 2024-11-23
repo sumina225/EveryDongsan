@@ -6,22 +6,20 @@
         <img src="../assets/mainlog.png" alt="새 로고" class="logo-image" />
       </div>
 
-      <!-- 로그인 상태에 따라 UI 변경 -->
-      <div class="wrap" v-if="!isLoggedIn">
-        <div class="login-button" @click="goToLogin">로그인</div>
-        <div class="signup-button" @click="goToSignup">회원가입</div>
-        <div class="find-password" @click="goToFind">아이디/비밀번호 찾기</div>
-      </div>
-      <div class="wrap" v-else>
-        <div class="user-info">
-          <div class="user-name">
-            <span style="color: red; font-weight: bold">{{ userName }}</span>님
-            안녕하세요.
-          </div>
-          <div class="user-dropdown">
-            <div class="myPage" @click="viewProfile">내 정보</div>
-            <div class="logout_btn" @click="logout">로그아웃</div>
-          </div>
+      <!-- 로그인/로그아웃 상태에 따라 변경 -->
+      <div class="wrap">
+        <!-- 로그인 상태 메시지 -->
+        <div v-if="isLoggedIn" class="welcome-message">
+          <p>{{ userName }}</p> 님, 환영합니다.
+        </div>
+        <div class="action-button" @click="handlePrimaryAction">
+          {{ primaryActionText }}
+        </div>
+        <div class="action-button secondary" @click="handleSecondaryAction">
+          {{ secondaryActionText }}
+        </div>
+        <div class="find-password" v-if="!isLoggedIn" @click="goToFind">
+          아이디/비밀번호 찾기
         </div>
       </div>
     </div>
@@ -54,20 +52,46 @@
 </template>
 
 <script setup>
-import { ref, computed, watch, onMounted } from "vue";
+import { ref, computed, onMounted } from "vue";
 import { useRouter } from "vue-router";
-import { useUserStore } from "../stores/useUserStore"; // Pinia 스토어 예시
+import { useUserStore } from "../stores/useUserStore";
 
 const router = useRouter();
 const userStore = useUserStore();
 
 onMounted(() => {
-  userStore.checkToken();
+  userStore.checkToken(); // 토큰 체크
 });
 
 const isLoggedIn = computed(() => userStore.isLoggedIn);
-const userName = computed(() => userStore.user?.name || "Guest");
+const userName = computed(() => userStore.user?.name || "");
 
+// 동적으로 텍스트와 동작 변경
+const primaryActionText = computed(() =>
+  isLoggedIn.value ? "로그아웃" : "로그인"
+);
+const secondaryActionText = computed(() =>
+  isLoggedIn.value ? "내 정보" : "회원가입"
+);
+
+// 버튼 동작
+const handlePrimaryAction = async () => {
+  if (isLoggedIn.value) {
+    await userStore.logout(router); // 로그아웃
+  } else {
+    router.push("/login"); // 로그인 페이지로 이동
+  }
+};
+
+const handleSecondaryAction = () => {
+  if (isLoggedIn.value) {
+    router.push("/myPage"); // 내 정보 페이지로 이동
+  } else {
+    router.push("/sign"); // 회원가입 페이지로 이동
+  }
+};
+
+// 검색 관련 로직
 const searchQuery = ref("");
 const campusList = ref([
   { name: "경희대", members: 15000, link: "https://everytime.kr/campus/1" },
@@ -82,13 +106,10 @@ const filteredResults = computed(() => {
   );
 });
 
-const goToLogin = () => router.push("/login");
-const goToSignup = () => router.push("/sign");
 const goToFind = () => router.push("/find");
-const viewProfile = () => router.push("/myPage");
-const logout = async () => {
-  await userStore.logout(router);
-};
+const searchCampus = () => {};
+
+
 </script>
 
 <style scoped>
@@ -104,7 +125,6 @@ const logout = async () => {
   background-color: #fff;
 }
 
-/* 로고 섹션 */
 .logo {
   display: flex;
   justify-content: center;
@@ -113,48 +133,60 @@ const logout = async () => {
 }
 
 .logo-image {
-  width: 230px; /* 원하는 크기로 설정 */
+  width: 230px;
   height: auto;
   object-fit: contain;
 }
 
-/* 로그인 상태 */
+/* 공통 버튼 스타일 */
 .wrap {
   width: 100%;
   display: flex;
-  flex-direction: column; /* 세로 정렬 */
-  align-items: center; /* 가로 중앙 정렬 */
+  flex-direction: column;
+  align-items: center;
 }
 
-.login-button,
-.signup-button {
+.welcome-message {
+  margin-top: 5px;
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 12px;
+  display: flex;
+  float: left;
+}
+
+.welcome-message p{
+  color: rgb(79, 168, 27);
+  font-weight: bold;
+}
+
+.action-button {
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 90%;
+  width: 85%;
   height: 40px;
   margin-bottom: 12px;
-  
   border-radius: 12px;
   font-size: 14px;
   font-weight: bold;
   cursor: pointer;
 }
 
-.login-button {
+.action-button {
+  background-color: rgb(79, 168, 27);
+  color: white;
+}
+
+.action-button.secondary {
   border: 1px solid #d2cece;
   background-color: #fff;
   color: #737373;
 }
 
-.signup-button {
-  background-color: rgb(79, 168, 27); /* 활성화 상태 배경색 */
-  color: white;
-}
-
 .find-password {
-  width: 90%;
-  font-size: 12px;
+  width: 85%;
+  font-size: 13px;
   color: #737373;
   text-align: center;
   cursor: pointer;
@@ -168,26 +200,19 @@ const logout = async () => {
 .search-title {
   font-size: 16px;
   font-weight: bold;
-  margin-left:10px;
+  margin-left: 10px;
 }
 
 input {
-  width: 100%;
+  width: 95%;
   height: 44px;
   padding: 0 12px;
   border-radius: 12px;
   font-size: 14px;
   background-color: #f2f2f2;
+  margin-left:5px;
+  margin-top:5px;
 }
 
-/* 검색 결과 */
-.search-results ul {
-  list-style: none;
-  padding: 0;
-}
 
-.search-results a {
-  text-decoration: none;
-  color: black;
-}
 </style>

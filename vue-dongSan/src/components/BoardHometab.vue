@@ -54,48 +54,40 @@
 import { ref, watch, computed } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import { useUserStore } from "@/stores/useUserStore"; // Pinia 스토어 사용
+import { useBoardStore } from "@/stores/useBoardStore";
 
 const router = useRouter();
 const route = useRoute();
 const userStore = useUserStore();
+const postStore = useBoardStore();
 
 // 로그인 여부 확인
 const isLoggedIn = computed(() => userStore.isLoggedIn);
 
 const activeTab = ref("all");
 
-// 라우터 이동 함수
-const setActiveTab = (tab) => {
+const setActiveTab = async (tab) => {
   activeTab.value = tab;
 
   if (tab === "all") {
-    router.push("/board");
+    await router.push("/board");
+    postStore.fetchPosts(); // 전체 게시물 요청
   } else if (tab === "rental") {
-    router.push("/board/rental");
+    await router.push("/board/rental");
+    await postStore.fetchPosts(); // 전체 게시물 요청
   } else if (tab === "student") {
-    router.push("/board/student");
+    await router.push("/board/student");
+    await postStore.fetchPosts(); // 전체 게시물 요청
   }
 };
+
+
 
 // 매물등록 페이지로 이동
 const goToRegister = () => {
   router.push("/board/register");
 };
 
-// 라우터 경로 변화에 따라 activeTab 동기화
-watch(
-  () => route.path,
-  (newPath) => {
-    if (newPath === "/board") {
-      activeTab.value = "all";
-    } else if (newPath === "/board/rental") {
-      activeTab.value = "rental";
-    } else if (newPath === "/board/student") {
-      activeTab.value = "student";
-    }
-  },
-  { immediate: true }
-);
 </script>
 
 <style scoped>

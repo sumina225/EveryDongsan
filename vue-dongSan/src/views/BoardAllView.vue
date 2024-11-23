@@ -1,102 +1,116 @@
 <template>
-  <!-- 게시물 카드 리스트 -->
-  <div class="card-container">
-    <div v-for="post in currentPosts" :key="post.id" class="sub-wrap">
-      <Card :post="post" />
-    </div>
-  </div>
+  <div class="board-view">
+    <!-- 게시물 리스트 -->
+    <ul class="post-list">
+      <BoardPostCard
+        v-for="post in postStore.posts"
+        :key="post.articleNo"
+        :post="post"
+        @click="postStore.selectPost(post)"
+      />
+    </ul>
 
-  <!-- 페이지네이션 -->
-  <div class="pagination">
-    <button
-      v-for="page in totalPages"
-      :key="page"
-      :class="{ active: page === currentPage }"
-      @click="changePage(page)"
-    >
-      {{ page }}
-    </button>
+    <!-- 페이지네이션 -->
+    <div class="pagination">
+      <button
+        :disabled="postStore.currentPage === 1"
+        @click="changePage(postStore.currentPage - 1)"
+      >
+        이전
+      </button>
+      <button
+        v-for="page in postStore.totalPages"
+        :key="page"
+        :class="{ active: page === postStore.currentPage }"
+        @click="changePage(page)"
+      >
+        {{ page }}
+      </button>
+      <button
+        :disabled="postStore.currentPage === postStore.totalPages"
+        @click="changePage(postStore.currentPage + 1)"
+      >
+        다음
+      </button>
+    </div>
+
+    <!-- 게시물 상세 모달 -->
+    <BoardModalCard
+      v-if="postStore.selectedPost"
+      :post="postStore.selectedPost"
+      @close="postStore.closeModal"
+    />
   </div>
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
-import Card from "../components/BoardPostCard.vue";
+import { onMounted,watch } from "vue";
+import { useBoardStore } from "@/stores/useBoardStore";
+import BoardPostCard from "@/components/BoardPostCard.vue";
+import BoardModalCard from "@/components/BoardModalCard.vue";
+import {useRouter} from "vue-router";
 
-const posts = ref(
-  Array.from({ length: 100 }, (_, i) => ({
-    id: i + 1,
-    title: `게시물 제목 ${i + 1}`,
-    description: `이것은 게시물 ${i + 1}의 내용입니다.`,
-    image: "https://via.placeholder.com/150",
-  }))
-);
+const route = useRouter();
+const postStore = useBoardStore();
 
-const currentPage = ref(1);
-const postsPerPage = 20;
-
-const totalPages = computed(() => Math.ceil(posts.value.length / postsPerPage));
-
-const currentPosts = computed(() => {
-  const start = (currentPage.value - 1) * postsPerPage;
-  const end = start + postsPerPage;
-  return posts.value.slice(start, end);
+// 초기 데이터 로드
+onMounted(async () => {
+  await postStore.fetchPosts();
 });
 
-const changePage = (page) => {
-  currentPage.value = page;
-};
 
-const navigateTo = (section) => {
-  console.log(`${section}로 이동합니다.`); // 실제 네비게이션 로직 구현 가능
+// 라우터 경로 변경 시 데이터 재요청
+watch(
+  () => route.path,
+  async () => {
+    if (!postStore.posts.length) {
+      await postStore.fetchPosts();
+    }
+  }
+);
+
+
+// 페이지 변경 로직
+const changePage = (page) => {
+  postStore.changePage(page);
 };
 </script>
 
 <style scoped>
-/* 네비게이션 바 스타일 */
-
-
-
-/* 카드 컨테이너 */
-.card-container {
-  margin-top: -20px;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 20px;
-  justify-content: center;
-  padding: 20px 10%;
+.board-view {
+  width: 80%; /* 화면의 80%만 사용 */
+  margin: 0 auto; /* 가운데 정렬 */
+  padding: 20px;
 }
 
-/* 각 카드 */
-.sub-wrap {
-  width: 22%;
-  height: 25%;
+.post-list {
+  display: grid; /* 그리드 레이아웃 */
+  grid-template-columns: repeat(4, 1fr); /* 한 줄에 4개 */
+  gap: 16px; /* 카드 간격 */
 }
 
-/* 페이지네이션 스타일 */
 .pagination {
   display: flex;
   justify-content: center;
   margin-top: 20px;
-  margin-bottom: 30px;
-  gap: 10px;
+  gap: 8px;
 }
 
 .pagination button {
   padding: 8px 16px;
-  border: none;
+  border: 1px solid #ddd;
   border-radius: 4px;
+  background-color: #f9f9f9;
   cursor: pointer;
-  background-color: #f2f2f2;
-  transition: background-color 0.3s;
 }
 
 .pagination button.active {
-  background-color: rgb(79, 168, 27); /* 활성화 상태 배경색 */;
+  background-color: #007bff;
   color: white;
 }
 
-.pagination button:hover {
-  background-color: #d6d6d6;
+.pagination button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
 }
 </style>
