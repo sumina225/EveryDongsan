@@ -1,5 +1,11 @@
 package com.dongsan.map.service;
 
-public interface MapService {
+import java.util.List;
 
+import com.dongsan.board.model.Board;
+import com.dongsan.home.model.Home;
+
+public interface MapService {
+	List<Home> searchByschool(String school);
+	List<Board> searchBoardByhomeNo(int homeNo);
 }

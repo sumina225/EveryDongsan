@@ -2,6 +2,22 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.dongsan.board.mapper.MapMapper">
-
+<mapper namespace="com.dongsan.map.mapper.MapMapper">
+	<select id="searchSchoolId" parameterType="String" resultType="Integer">
+		select schoolId
+		from school
+		where school = #{school}
+	</select>
+	
+	<select id="searchBySchool" parameterType="Integer" resultType="homeEntity">
+		select *
+		from home
+		where schoolId = #{schoolId}
+	</select>
+	
+	<select id="searchBoardByhomeNo" parameterType="Integer" resultType="boardEntity">
+		select *
+		from community
+		where homeNo = #{homeNo}
+	</select>
 </mapper>
