@@ -1,9 +1,10 @@
 <template>
-  <div id="map" style="width: 100%; height: 100%; overflow-y: auto"></div>
+  <searchBar></searchBar>
 </template>
 
 <script setup>
 import { ref } from "vue";
+import searchBar from "../components/MapSearchBar.vue"
 </script>
 
 <style scope>

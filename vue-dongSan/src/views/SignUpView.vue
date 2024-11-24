@@ -12,14 +12,7 @@
           <dl :class="{ ok: check === 1, error: check === 0 }">
             <dt>아이디</dt>
             <dd>
-              <input
-                v-model="id"
-                type="text"
-                maxlength="12"
-                placeholder=""
-                autocomplete="off"
-                title="아이디"
-              />
+              <input v-model="id" type="text" maxlength="12" placeholder="" autocomplete="off" title="아이디" />
               <span></span>
             </dd>
             <input type="hidden" name="check_id" value="0" />
@@ -28,14 +21,7 @@
           <dl :class="{ ok: check2 === 1, error: check2 === 0 }">
             <dt>비밀번호</dt>
             <dd>
-              <input
-                v-model="password"
-                type="password"
-                maxlength="16"
-                placeholder=""
-                autocomplete="off"
-                title="비밀번호"
-              />
+              <input v-model="password" type="password" maxlength="16" placeholder="" autocomplete="off" title="비밀번호" />
               <span></span>
             </dd>
             <p>{{ msgPw }}</p>
@@ -43,14 +29,8 @@
           <dl :class="{ ok: check3 === 1, error: check3 === 0 }">
             <dt>비밀번호 재확인</dt>
             <dd>
-              <input
-                v-model="password2"
-                type="password"
-                maxlength="15"
-                placeholder=""
-                autocomplete="off"
-                title="비밀번호 재확인"
-              />
+              <input v-model="password2" type="password" maxlength="15" placeholder="" autocomplete="off"
+                title="비밀번호 재확인" />
               <span></span>
             </dd>
             <p>{{ msgPw2 }}</p>
@@ -58,53 +38,22 @@
           <dl :class="{ ok: checkName === 1, error: checkName === 0 }">
             <dt>이름</dt>
             <dd>
-              <input
-                v-model="name"
-                type="text"
-                maxlength="25"
-                placeholder=""
-                autocomplete="off"
-                title="이름"
-              />
+              <input v-model="name" type="text" maxlength="25" placeholder="" autocomplete="off" title="이름" />
               <span></span>
             </dd>
             <p>{{ msgName }}</p>
           </dl>
-          <dl
-            class="birth"
-            :class="{ ok: checkBirth === 1, error: checkBirth === 0 }"
-          >
+          <dl class="birth" :class="{ ok: checkBirth === 1, error: checkBirth === 0 }">
             <dt>생년월일</dt>
             <dd>
-              <input
-                v-model="year"
-                type="text"
-                maxlength="4"
-                placeholder="년(4자)"
-                autocomplete="off"
-                title="년(4자)"
-              />
+              <input v-model="year" type="text" maxlength="4" placeholder="년(4자)" autocomplete="off" title="년(4자)" />
               <div>
-                <input
-                  style="margin-left: 3.7%"
-                  v-model="month"
-                  type="text"
-                  maxlength="2"
-                  placeholder="월"
-                  autocomplete="off"
-                  title="월"
-                />
+                <input style="margin-left: 3.7%" v-model="month" type="text" maxlength="2" placeholder="월"
+                  autocomplete="off" title="월" />
               </div>
               <div>
-                <input
-                  style="margin-left: 3.7%"
-                  v-model="day"
-                  type="text"
-                  maxlength="2"
-                  placeholder="일"
-                  autocomplete="off"
-                  title="일"
-                />
+                <input style="margin-left: 3.7%" v-model="day" type="text" maxlength="2" placeholder="일"
+                  autocomplete="off" title="일" />
               </div>
               <span style="right: 18px"></span>
             </dd>
@@ -114,82 +63,37 @@
             <dt>역할</dt>
             <dd>
               <div>
-                <input
-                  type="radio"
-                  id="Student"
-                  name="role"
-                  value="학생"
-                  v-model="selectedRole"
-                /><label for="Student" :class="{ on: selectedRole === '학생' }"
-                  ><span><em></em>학생</span></label
-                >
+                <input type="radio" id="Student" name="role" value="학생" v-model="selectedRole" /><label for="Student"
+                  :class="{ on: selectedRole === '학생' }"><span><em></em>학생</span></label>
               </div>
               <div>
-                <input
-                  type="radio"
-                  id="Rental"
-                  name="role"
-                  value="부동산"
-                  v-model="selectedRole"
-                /><label for="Rental" :class="{ on: selectedRole === '부동산' }"
-                  ><span><em></em>부동산</span></label
-                >
+                <input type="radio" id="Rental" name="role" value="부동산" v-model="selectedRole" /><label for="Rental"
+                  :class="{ on: selectedRole === '부동산' }"><span><em></em>부동산</span></label>
               </div>
             </dd>
             <p></p>
           </dl>
-          <dl
-            class="school"
-            :class="{ ok: checkSchool === 1, error: checkSchool === 0 }"
-          >
+          <dl class="school" :class="{ ok: checkSchool === 1, error: checkSchool === 0 }">
             <dt>학교</dt>
             <dd @click="openModal">
-              <input
-                v-model="school"
-                type="text"
-                name="school"
-                id="school"
-                autocomplete="off"
-                title="학교"
-                readonly
-                :class="{ filled: school }"
-              />
+              <input v-model="school" type="text" name="school" id="school" autocomplete="off" title="학교" readonly
+                :class="{ filled: school }" />
               <span></span>
             </dd>
             <p>{{ msgSchool }}</p>
           </dl>
-          <dl
-            class="email"
-            :class="{ ok: checkEmail === 1, error: checkEmail === 0 }"
-          >
+          <dl class="email" :class="{ ok: checkEmail === 1, error: checkEmail === 0 }">
             <dt>이메일</dt>
             <dd>
-              <input
-                v-model="email"
-                type="text"
-                name="email"
-                id="email"
-                autocomplete="off"
-                title="이메일"
-              />
+              <input v-model="email" type="text" name="email" id="email" autocomplete="off" title="이메일" />
               <span></span>
             </dd>
             <p>{{ msgEmail }}</p>
           </dl>
-          <dl
-            class="phone"
-            :class="{ ok: checkPhone === 1, error: checkPhone === 0 }"
-          >
+          <dl class="phone" :class="{ ok: checkPhone === 1, error: checkPhone === 0 }">
             <dt>휴대폰</dt>
             <dd>
-              <input
-                v-model="tel"
-                type="text"
-                name="mobile"
-                id="phone"
-                autocomplete="off"
-                placeholder="‘-’ 입력 해주세요."
-              />
+              <input v-model="tel" type="text" name="mobile" id="phone" autocomplete="off" placeholder="‘-’ 입력 해주세요." />
               <span></span>
             </dd>
             <p>{{ msgPhone }}</p>
@@ -206,18 +110,9 @@
   <div v-if="isModalOpen" class="modal-backdrop" @click.self="closeModal">
     <div class="modal">
       <h2>학교 검색</h2>
-      <input
-        v-model="searchQuery"
-        type="text"
-        placeholder="학교명을 입력하세요"
-        @input="searchSchools"
-      />
+      <input v-model="searchQuery" type="text" placeholder="학교명을 입력하세요" @input="searchSchools" />
       <ul>
-        <li
-          v-for="(school, index) in filteredSchools"
-          :key="index"
-          @click="selectSchool(school.name)"
-        >
+        <li v-for="(school, index) in filteredSchools" :key="index" @click="selectSchool(school.name)">
           {{ school.name }}
         </li>
       </ul>
@@ -743,7 +638,8 @@ html {
   padding: 0;
   font-size: 12px;
   text-decoration: none;
-  background-color: #f5f5f5; /* 배경 색 설정 */
+  background-color: #f5f5f5;
+  /* 배경 색 설정 */
 }
 
 .header {
@@ -769,9 +665,11 @@ div {
 .step3,
 .step4 {
   width: 100%;
-  max-width: 500px; /* 스텝 크기를 제한 */
+  max-width: 500px;
+  /* 스텝 크기를 제한 */
   padding: 20px;
-  background: #fafafa; /* 배경 색을 추가하면 더 보기 좋음 */
+  background: #fafafa;
+  /* 배경 색을 추가하면 더 보기 좋음 */
   margin: auto;
 }
 
@@ -783,10 +681,10 @@ div {
   margin-top: -10px;
 }
 
-.logo img{
+.logo img {
   width: 80%;
   height: 130px;
-  
+
 }
 
 .logo a {
@@ -1018,7 +916,8 @@ div {
 }
 
 .membership dl.school dd input.filled {
-  background-color: #f2f2f2; /* 회색 배경 */
+  background-color: #f2f2f2;
+  /* 회색 배경 */
   cursor: not-allowed;
 }
 
@@ -1028,7 +927,8 @@ div {
   border-radius: 8px;
   width: 400px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-  animation: fadeIn 0.3s ease-in-out; /* 부드러운 등장 애니메이션 */
+  animation: fadeIn 0.3s ease-in-out;
+  /* 부드러운 등장 애니메이션 */
 }
 
 .modal-backdrop {
@@ -1037,11 +937,15 @@ div {
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-color: rgba(0, 0, 0, 0.5); /* 반투명 배경 */
+  background-color: rgba(0, 0, 0, 0.5);
+  /* 반투명 배경 */
   display: flex;
-  justify-content: center; /* 가로 정중앙 */
-  align-items: center; /* 세로 정중앙 */
-  z-index: 1000; /* 모달 위에 표시 */
+  justify-content: center;
+  /* 가로 정중앙 */
+  align-items: center;
+  /* 세로 정중앙 */
+  z-index: 1000;
+  /* 모달 위에 표시 */
 }
 
 .modal h2 {

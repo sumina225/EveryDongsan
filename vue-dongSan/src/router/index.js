@@ -5,7 +5,7 @@ import SignUpView from "@/views/SignUpView.vue";
 import FindView from "@/views/FindIdPwView.vue";
 import SearchMapView from "@/views/SearchMapView.vue";
 import MyPageView from "@/views/MyPageView.vue";
-import BoardStudentView from "../views/BoardStudentView.vue";
+import MyListView from "@/views/MyListView.vue";
 import BoardAllView from "@/views/BoardAllView.vue";
 import RegisterView from "@/views/RegisterView.vue";
 // import SignUp from "@/views/SignUp.vue";
@@ -36,12 +36,12 @@ const routes = [
     component: MyPageView,
   },
   {
-    path: "/board",
-    component: BoardAllView,
+    path: "/myList",
+    component: MyListView,
   },
   {
-    path: "/board/Student",
-    component: BoardStudentView,
+    path: "/board",
+    component: BoardAllView,
   },
   {
     path: "/board/register",

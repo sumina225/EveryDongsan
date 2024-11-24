@@ -2,7 +2,7 @@
 import { defineStore } from "pinia";
 import axios from "@/axios";
 
-export const usePostStore = defineStore("post", {
+export const usePostStore = defineStore("addpost", {
     state: () => ({
         posts: [], // 게시물 리스트
         loading: false, // 로딩 상태

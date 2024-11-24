@@ -31,7 +31,7 @@ const route = useRoute();
 const currentRoute = ref(route.path); // 초기 경로 설정
 const hiddenRoutes = ["/login", "/searchMap"];
 const hearderHides = ["/login", "/"];
-const boardtap = ["/board", "/board/student", "/board/listAll","/board/rental"];
+const boardtap = ["/board", "/board/student", "/board/listAll", "/board/rental"];
 
 // 경로 변경 감지
 watch(
