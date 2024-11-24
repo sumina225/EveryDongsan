@@ -14,6 +14,7 @@ import com.dongsan.board.model.Board;
 import com.dongsan.board.model.Review;
 import com.dongsan.home.entity.HomeEntity;
 import com.dongsan.home.model.Home;
+import com.dongsan.member.mapper.MemberMapper;
 
 @Service
 public class BoardServiceImpl implements BoardService {
@@ -23,6 +24,9 @@ public class BoardServiceImpl implements BoardService {
 
 	@Autowired
 	private HomeMapper homeMapper;
+	
+	@Autowired
+	private MemberMapper memberMapper;
 
 	@Override
 	public boolean posts(Board board) {
@@ -56,9 +60,12 @@ public class BoardServiceImpl implements BoardService {
 		for (BoardEntity b : entityList) {
 			Board temp = b.toDto();
 			HomeEntity homeEntity = homeMapper.findHomeByNum(b.getHomeNo()).get(0);
+			String tel = memberMapper.findById(homeEntity.getMemberId()).getTel();
+			temp.setTel(tel);
 			Home home = homeEntity.toDto();
 			home.setSchool(homeMapper.findSchool(homeEntity.getSchoolId()));
 			temp.setHome(home);
+			
 			list.add(temp);
 		}
 		return list;
@@ -72,6 +79,8 @@ public class BoardServiceImpl implements BoardService {
 		for (BoardEntity b : entityList) {
 			Board temp = b.toDto();
 			HomeEntity homeEntity = homeMapper.findHomeByNum(b.getHomeNo()).get(0);
+			String tel = memberMapper.findById(homeEntity.getMemberId()).getTel();
+			temp.setTel(tel);
 			Home home = homeEntity.toDto();
 			home.setSchool(homeMapper.findSchool(homeEntity.getSchoolId()));
 			temp.setHome(home);
@@ -117,6 +126,8 @@ public class BoardServiceImpl implements BoardService {
 		for (BoardEntity b : entityList) {
 			Board temp = b.toDto();
 			HomeEntity homeEntity = homeMapper.findHomeByNum(b.getHomeNo()).get(0);
+			String tel = memberMapper.findById(homeEntity.getMemberId()).getTel();
+			temp.setTel(tel);
 			Home home = homeEntity.toDto();
 			home.setSchool(homeMapper.findSchool(homeEntity.getSchoolId()));
 			temp.setHome(home);
@@ -134,6 +145,8 @@ public class BoardServiceImpl implements BoardService {
 		for (BoardEntity b : entityList) {
 			Board temp = b.toDto();
 			HomeEntity homeEntity = homeMapper.findHomeByNum(b.getHomeNo()).get(0);
+			String tel = memberMapper.findById(homeEntity.getMemberId()).getTel();
+			temp.setTel(tel);
 			Home home = homeEntity.toDto();
 			home.setSchool(homeMapper.findSchool(homeEntity.getSchoolId()));
 			temp.setHome(home);
@@ -150,6 +163,8 @@ public class BoardServiceImpl implements BoardService {
 		for (BoardEntity b : entityList) {
 			Board temp = b.toDto();
 			HomeEntity homeEntity = homeMapper.findHomeByNum(b.getHomeNo()).get(0);
+			String tel = memberMapper.findById(homeEntity.getMemberId()).getTel();
+			temp.setTel(tel);
 			Home home = homeEntity.toDto();
 			home.setSchool(homeMapper.findSchool(homeEntity.getSchoolId()));
 			temp.setHome(home);
@@ -163,6 +178,8 @@ public class BoardServiceImpl implements BoardService {
 		BoardEntity boardEntity = boardMapper.getArticle(articleNo);
 		Board temp = boardEntity.toDto();
 		HomeEntity homeEntity = homeMapper.findHomeByNum(boardEntity.getHomeNo()).get(0);
+		String tel = memberMapper.findById(homeEntity.getMemberId()).getTel();
+		temp.setTel(tel);
 		Home home = homeEntity.toDto();
 		home.setSchool(homeMapper.findSchool(homeEntity.getSchoolId()));
 		temp.setHome(home);
@@ -224,6 +241,8 @@ public class BoardServiceImpl implements BoardService {
 		for (BoardEntity b : entityList) {
 			Board temp = b.toDto();
 			HomeEntity homeEntity = homeMapper.findHomeByNum(b.getHomeNo()).get(0);
+			String tel = memberMapper.findById(homeEntity.getMemberId()).getTel();
+			temp.setTel(tel);
 			Home home = homeEntity.toDto();
 			home.setSchool(homeMapper.findSchool(homeEntity.getSchoolId()));
 			temp.setHome(home);
@@ -241,6 +260,8 @@ public class BoardServiceImpl implements BoardService {
 		for (BoardEntity b : entityList) {
 			Board temp = b.toDto();
 			HomeEntity homeEntity = homeMapper.findHomeByNum(b.getHomeNo()).get(0);
+			String tel = memberMapper.findById(homeEntity.getMemberId()).getTel();
+			temp.setTel(tel);
 			Home home = homeEntity.toDto();
 			home.setSchool(homeMapper.findSchool(homeEntity.getSchoolId()));
 			temp.setHome(home);
@@ -257,6 +278,8 @@ public class BoardServiceImpl implements BoardService {
 		for (BoardEntity b : entityList) {
 			Board temp = b.toDto();
 			HomeEntity homeEntity = homeMapper.findHomeByNum(b.getHomeNo()).get(0);
+			String tel = memberMapper.findById(homeEntity.getMemberId()).getTel();
+			temp.setTel(tel);
 			Home home = homeEntity.toDto();
 			home.setSchool(homeMapper.findSchool(homeEntity.getSchoolId()));
 			temp.setHome(home);
@@ -273,6 +296,8 @@ public class BoardServiceImpl implements BoardService {
 		for (BoardEntity b : entityList) {
 			Board temp = b.toDto();
 			HomeEntity homeEntity = homeMapper.findHomeByNum(b.getHomeNo()).get(0);
+			String tel = memberMapper.findById(homeEntity.getMemberId()).getTel();
+			temp.setTel(tel);
 			Home home = homeEntity.toDto();
 			home.setSchool(homeMapper.findSchool(homeEntity.getSchoolId()));
 			temp.setHome(home);
@@ -290,6 +315,8 @@ public class BoardServiceImpl implements BoardService {
 		for (BoardEntity b : entityList) {
 			Board temp = b.toDto();
 			HomeEntity homeEntity = homeMapper.findHomeByNum(b.getHomeNo()).get(0);
+			String tel = memberMapper.findById(homeEntity.getMemberId()).getTel();
+			temp.setTel(tel);
 			Home home = homeEntity.toDto();
 			home.setSchool(homeMapper.findSchool(homeEntity.getSchoolId()));
 			temp.setHome(home);
@@ -306,6 +333,8 @@ public class BoardServiceImpl implements BoardService {
 		for (BoardEntity b : entityList) {
 			Board temp = b.toDto();
 			HomeEntity homeEntity = homeMapper.findHomeByNum(b.getHomeNo()).get(0);
+			String tel = memberMapper.findById(homeEntity.getMemberId()).getTel();
+			temp.setTel(tel);
 			Home home = homeEntity.toDto();
 			home.setSchool(homeMapper.findSchool(homeEntity.getSchoolId()));
 			temp.setHome(home);

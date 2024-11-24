@@ -22,6 +22,7 @@ public class Board {
     private String content; // 게시글 내용
     private int hit; // 조회수
     private Home home; // 매물 정보 (HomeDTO)
+    private String tel;
     
     public BoardEntity toEntity() {
     	return BoardEntity.builder()
