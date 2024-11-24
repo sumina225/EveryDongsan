@@ -10,7 +10,7 @@ import com.dongsan.home.entity.HomeEntity;
 @Mapper
 public interface HomeMapper {
 	void insertHome(HomeEntity homeEntity);
-	int getHomeNo(HomeEntity homeEntity);
+	List<Integer> getHomeNo(HomeEntity homeEntity);
 	int findHome(HomeEntity homeEntity);
 	List<HomeEntity> findHomeByNum(int homeNo);
 	void updateHome(HomeEntity homeEntity);

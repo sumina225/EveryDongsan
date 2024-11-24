@@ -15,7 +15,8 @@
 		select no
 		from home
 		where name = #{name} and memberId =
-		#{memberId}
+		#{memberId} and latitude = #{latitude} and longitude = #{longitude}
+		and price = #{price} and rentalType = #{rentalType}
 	</select>
 
 	<insert id="insertHome" parameterType="homeEntity">

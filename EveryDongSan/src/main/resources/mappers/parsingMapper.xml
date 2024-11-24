@@ -1,0 +1,15 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dongsan.parsing.mapper.ParsingMapper">
+	<insert id="insertHomeData" parameterType="list">
+		insert into
+		home(name,latitude,longitude,area,category,price,rentalType,memberId,schoolId)
+		values
+		<foreach collection="list" item="item" separator=",">
+			(#{item.name}, #{item.latitude}, #{item.longitude}, #{item.area},
+			#{item.category}, #{item.price}, #{item.rentalType},
+			#{item.memberId}, #{item.schoolId})
+		</foreach>
+	</insert>
+</mapper>

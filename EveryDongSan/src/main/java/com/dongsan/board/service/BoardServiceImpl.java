@@ -37,7 +37,7 @@ public class BoardServiceImpl implements BoardService {
 		if (check == 0) {
 			homeMapper.insertHome(homeEntity);
 		}
-		homeEntity.setNo(homeMapper.getHomeNo(homeEntity));
+		homeEntity.setNo(homeMapper.getHomeNo(homeEntity).get(0));
 		
 		
 		boardEntity.setHomeNo(homeEntity.getNo());
@@ -177,6 +177,7 @@ public class BoardServiceImpl implements BoardService {
 	@Override
 	public void addReview(int articleNo, Review review) {
 		ReviewEntity reviewEntity = review.toEntity();
+		System.out.println(articleNo);
 		reviewEntity.setHomeNo(boardMapper.findHomeNoByBoard(articleNo));
 		boardMapper.insertReview(reviewEntity);
 		
