@@ -14,10 +14,21 @@
 import MapKaKao from "@/components/MapKaKao.vue";
 import MapsearchBar from "../components/MapSearchBar.vue";
 import MapSideBar from "@/components/MapSideBar.vue";
-import { ref } from "vue";
+import { useMapSearchStore } from "@/stores/MapSearchStore";
+import { ref,onMounted } from "vue";
+import { useRoute } from "vue-router";
 
 // 선택된 학교 정보
 const selectedSchool = ref(null);
+const route = useRoute();
+const mapSearchStore = useMapSearchStore();
+
+onMounted(async () => {
+  const schoolName = route.query.school;
+  if (schoolName) {
+    await mapSearchStore.searchBySchool(schoolName); // 매물 검색
+  }
+});
 
 // 별점순 정렬 함수
 const sortSchoolsByRating = () => {

@@ -7,7 +7,7 @@
         :key="index"
         class="menu-item"
         tabindex="0"
-        @click="selectMenu(menu.label)"
+        @click="handleMenuClick(menu.label)"
       >
         <div class="menu-label">{{ menu.label }}</div>
       </div>
@@ -17,39 +17,43 @@
       v-for="property in visibleProperties"
       :key="property.no"
       class="property-card"
-      @click="handlePropertyClick(property)"
+      @click="handlePropertyClick(property.no)"
     >
       <div class="image-wrapper">
         <img src="../assets/apt.png" alt="매물 이미지" />
       </div>
       <div class="property-info">
-        <div class="property-title">
-          {{ property.school }} · {{ property.name }}
-        </div>
-        <div class="property-price">
-          {{ property.price }} ({{ property.rentalType }})
-        </div>
-        <div class="property-size">
-          {{ property.area }}m² ({{ property.category }})
-        </div>
+        <div class="property-title">{{ property.school }} · {{ property.name }}</div>
+        <div class="property-price">{{ property.price }} ({{ property.rentalType }})</div>
+        <div class="property-size">{{ property.area }}m² ({{ property.category }})</div>
         <div class="property-description">매물 점수: {{ property.score }}</div>
       </div>
     </div>
+    <div class="NoCard" v-show="visibleProperties.length <= 0">등록된 매물이 없습니다.</div>
   </div>
+
+  <!-- 모달 -->
+  <PropertyDetailModal
+    v-if="isModalOpen"
+    :property="selectedProperty"
+    @close="isModalOpen = false"
+  />
 </template>
 
 <script setup>
 import { ref, computed } from "vue";
 import { useMapSearchStore } from "@/stores/MapSearchStore";
+import { usePropertyStore } from "../stores/PropertyStore";
+import PropertyDetailModal from "./PropertyDetailModal.vue";
 
 const mapSearchStore = useMapSearchStore();
+const propertyStore = usePropertyStore();
+const selectedProperty = ref(null); // 선택된 매물 데이터
 const properties = computed(() => mapSearchStore.properties); // 전체 매물 데이터
 
 // 인피니티 스크롤 관련 상태 관리
 const visibleCount = ref(7); // 처음 표시할 매물 개수
-const visibleProperties = computed(() =>
-  properties.value.slice(0, visibleCount.value)
-); // 화면에 보이는 매물만
+const visibleProperties = computed(() => properties.value.slice(0, visibleCount.value)); // 화면에 보이는 매물만
 
 // 스크롤 이벤트 핸들러
 const handleScroll = (event) => {
@@ -63,30 +67,48 @@ const handleScroll = (event) => {
 // 추가 매물 로드
 const loadMoreProperties = () => {
   if (visibleCount.value < properties.value.length) {
-    visibleCount.value += 7; // 한 번에 5개씩 로드
+    visibleCount.value += 7; // 한 번에 7개씩 로드
   }
 };
 
-// 매물 클릭 처리
-const handlePropertyClick = (property) => {
-  mapSearchStore.selectProperty(property); // 선택된 매물 설정
+const isModalOpen = ref(false);
+
+//상세정보보기
+const handlePropertyClick = async (no) => {
+  try {
+    const propertyDetail = await propertyStore.fetchPropertyByNo(no);
+
+    console.log("가져온 매물 상세 정보:", propertyDetail);
+    selectedProperty.value = propertyDetail; // 선택된 매물 데이터 저장
+    isModalOpen.value = true; // 모달 열기
+  } catch (error) {
+    console.error("매물 상세 정보를 가져오는 중 오류 발생:", error);
+  }
 };
 
-//사이드 메뉴바
-const menuItems = ref([
-  { label: "전세" },
-  { label: "월세" },
-  { label: "별점" },
-]);
+// 메뉴 항목 관리
+const menuItems = ref([{ label: "전세" }, { label: "월세" }, { label: "별점" }]);
 
-const selectMenu = (menuLabel) => {
+// 메뉴 클릭 시 필터링 처리
+const handleMenuClick = (menuLabel) => {
   console.log(`선택된 메뉴: ${menuLabel}`);
+  if (menuLabel === "전세") {
+    mapSearchStore.properties = mapSearchStore.properties.filter(
+      (property) => property.rentalType === "전세"
+    );
+  } else if (menuLabel === "월세") {
+    mapSearchStore.properties = mapSearchStore.properties.filter(
+      (property) => property.rentalType === "월세"
+    );
+  } else if (menuLabel === "별점") {
+    mapSearchStore.properties.sort((a, b) => b.score - a.score);
+  }
 };
 </script>
 
 <style scoped>
 .sidebar {
-  width: 320px;
+  width: 340px;
   height: calc(100vh - 20px); /* 맵 높이에 맞춤 */
   background-color: #fff;
   overflow-y: auto;
@@ -162,6 +184,7 @@ const selectMenu = (menuLabel) => {
   height: 112px;
   overflow: hidden;
   position: relative;
+  margin: auto;
 }
 
 .image-wrapper img {
@@ -172,7 +195,7 @@ const selectMenu = (menuLabel) => {
 
 .property-info {
   flex: 1;
-  padding: 10px;
+  padding: 16px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -203,5 +226,14 @@ const selectMenu = (menuLabel) => {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.NoCard {
+  font-size: 20px;
+  text-align: center;
+  margin-top: 40px;
+  font-weight: 700;
+  font-family: "Pretendard", -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo",
+    "Malgun Gothic", "맑은 고딕", helvetica, sans-serif;
 }
 </style>

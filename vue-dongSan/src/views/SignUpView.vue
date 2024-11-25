@@ -5,14 +5,21 @@
       <div class="step step1">
         <h1 class="logo">
           <div @click="goHome">
-            <img src="../assets/mainlog.png" alt="로고">
+            <img src="../assets/mainlog.png" alt="로고" />
           </div>
         </h1>
         <div class="membership">
           <dl :class="{ ok: check === 1, error: check === 0 }">
             <dt>아이디</dt>
             <dd>
-              <input v-model="id" type="text" maxlength="12" placeholder="" autocomplete="off" title="아이디" />
+              <input
+                v-model="id"
+                type="text"
+                maxlength="12"
+                placeholder=""
+                autocomplete="off"
+                title="아이디"
+              />
               <span></span>
             </dd>
             <input type="hidden" name="check_id" value="0" />
@@ -21,7 +28,14 @@
           <dl :class="{ ok: check2 === 1, error: check2 === 0 }">
             <dt>비밀번호</dt>
             <dd>
-              <input v-model="password" type="password" maxlength="16" placeholder="" autocomplete="off" title="비밀번호" />
+              <input
+                v-model="password"
+                type="password"
+                maxlength="16"
+                placeholder=""
+                autocomplete="off"
+                title="비밀번호"
+              />
               <span></span>
             </dd>
             <p>{{ msgPw }}</p>
@@ -29,8 +43,14 @@
           <dl :class="{ ok: check3 === 1, error: check3 === 0 }">
             <dt>비밀번호 재확인</dt>
             <dd>
-              <input v-model="password2" type="password" maxlength="15" placeholder="" autocomplete="off"
-                title="비밀번호 재확인" />
+              <input
+                v-model="password2"
+                type="password"
+                maxlength="15"
+                placeholder=""
+                autocomplete="off"
+                title="비밀번호 재확인"
+              />
               <span></span>
             </dd>
             <p>{{ msgPw2 }}</p>
@@ -38,7 +58,14 @@
           <dl :class="{ ok: checkName === 1, error: checkName === 0 }">
             <dt>이름</dt>
             <dd>
-              <input v-model="name" type="text" maxlength="25" placeholder="" autocomplete="off" title="이름" />
+              <input
+                v-model="name"
+                type="text"
+                maxlength="25"
+                placeholder=""
+                autocomplete="off"
+                title="이름"
+              />
               <span></span>
             </dd>
             <p>{{ msgName }}</p>
@@ -46,14 +73,35 @@
           <dl class="birth" :class="{ ok: checkBirth === 1, error: checkBirth === 0 }">
             <dt>생년월일</dt>
             <dd>
-              <input v-model="year" type="text" maxlength="4" placeholder="년(4자)" autocomplete="off" title="년(4자)" />
+              <input
+                v-model="year"
+                type="text"
+                maxlength="4"
+                placeholder="년(4자)"
+                autocomplete="off"
+                title="년(4자)"
+              />
               <div>
-                <input style="margin-left: 3.7%" v-model="month" type="text" maxlength="2" placeholder="월"
-                  autocomplete="off" title="월" />
+                <input
+                  style="margin-left: 3.7%"
+                  v-model="month"
+                  type="text"
+                  maxlength="2"
+                  placeholder="월"
+                  autocomplete="off"
+                  title="월"
+                />
               </div>
               <div>
-                <input style="margin-left: 3.7%" v-model="day" type="text" maxlength="2" placeholder="일"
-                  autocomplete="off" title="일" />
+                <input
+                  style="margin-left: 3.7%"
+                  v-model="day"
+                  type="text"
+                  maxlength="2"
+                  placeholder="일"
+                  autocomplete="off"
+                  title="일"
+                />
               </div>
               <span style="right: 18px"></span>
             </dd>
@@ -63,12 +111,26 @@
             <dt>역할</dt>
             <dd>
               <div>
-                <input type="radio" id="Student" name="role" value="학생" v-model="selectedRole" /><label for="Student"
-                  :class="{ on: selectedRole === '학생' }"><span><em></em>학생</span></label>
+                <input
+                  type="radio"
+                  id="Student"
+                  name="role"
+                  value="학생"
+                  v-model="selectedRole"
+                /><label for="Student" :class="{ on: selectedRole === '학생' }"
+                  ><span><em></em>학생</span></label
+                >
               </div>
               <div>
-                <input type="radio" id="Rental" name="role" value="부동산" v-model="selectedRole" /><label for="Rental"
-                  :class="{ on: selectedRole === '부동산' }"><span><em></em>부동산</span></label>
+                <input
+                  type="radio"
+                  id="Rental"
+                  name="role"
+                  value="부동산"
+                  v-model="selectedRole"
+                /><label for="Rental" :class="{ on: selectedRole === '부동산' }"
+                  ><span><em></em>부동산</span></label
+                >
               </div>
             </dd>
             <p></p>
@@ -76,8 +138,16 @@
           <dl class="school" :class="{ ok: checkSchool === 1, error: checkSchool === 0 }">
             <dt>학교</dt>
             <dd @click="openModal">
-              <input v-model="school" type="text" name="school" id="school" autocomplete="off" title="학교" readonly
-                :class="{ filled: school }" />
+              <input
+                v-model="school"
+                type="text"
+                name="school"
+                id="school"
+                autocomplete="off"
+                title="학교"
+                readonly
+                :class="{ filled: school }"
+              />
               <span></span>
             </dd>
             <p>{{ msgSchool }}</p>
@@ -85,7 +155,14 @@
           <dl class="email" :class="{ ok: checkEmail === 1, error: checkEmail === 0 }">
             <dt>이메일</dt>
             <dd>
-              <input v-model="email" type="text" name="email" id="email" autocomplete="off" title="이메일" />
+              <input
+                v-model="email"
+                type="text"
+                name="email"
+                id="email"
+                autocomplete="off"
+                title="이메일"
+              />
               <span></span>
             </dd>
             <p>{{ msgEmail }}</p>
@@ -93,7 +170,14 @@
           <dl class="phone" :class="{ ok: checkPhone === 1, error: checkPhone === 0 }">
             <dt>휴대폰</dt>
             <dd>
-              <input v-model="tel" type="text" name="mobile" id="phone" autocomplete="off" placeholder="‘-’ 입력 해주세요." />
+              <input
+                v-model="tel"
+                type="text"
+                name="mobile"
+                id="phone"
+                autocomplete="off"
+                placeholder="‘-’ 입력 해주세요."
+              />
               <span></span>
             </dd>
             <p>{{ msgPhone }}</p>
@@ -110,9 +194,18 @@
   <div v-if="isModalOpen" class="modal-backdrop" @click.self="closeModal">
     <div class="modal">
       <h2>학교 검색</h2>
-      <input v-model="searchQuery" type="text" placeholder="학교명을 입력하세요" @input="searchSchools" />
+      <input
+        v-model="searchQuery"
+        type="text"
+        placeholder="학교명을 입력하세요"
+        @input="searchSchools"
+      />
       <ul>
-        <li v-for="(school, index) in filteredSchools" :key="index" @click="selectSchool(school.name)">
+        <li
+          v-for="(school, index) in filteredSchools"
+          :key="index"
+          @click="selectSchool(school.name)"
+        >
           {{ school.name }}
         </li>
       </ul>
@@ -144,9 +237,7 @@ onMounted(() => {
 const filteredSchools = computed(() => {
   if (!searchQuery.value.trim()) return schoolStore.schoolList.slice(0, 5);
   console.log(schoolStore.schoolList);
-  return schoolStore.schoolList.filter((school) =>
-    school.name.includes(searchQuery.value)
-  );
+  return schoolStore.schoolList.filter((school) => school.name.includes(searchQuery.value));
 });
 
 // 모달 열기
@@ -203,8 +294,7 @@ const _valid_name_check = (value) => {
 
 // 특수문자 체크 (영문+숫자 허용)
 const _is_hangle = (value) => {
-  const allowedChars =
-    "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+  const allowedChars = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
   for (let i = 0; i < value.length; i++) {
     if (!allowedChars.includes(value[i])) {
       return true;
@@ -239,11 +329,7 @@ const _valid_byte_check = (min, max, value) => {
     const code = value.charCodeAt(i);
     const ch = value[i].toUpperCase();
 
-    if (
-      (ch < "0" || ch > "9") &&
-      (ch < "A" || ch > "Z") &&
-      (code > 255 || code < 0)
-    ) {
+    if ((ch < "0" || ch > "9") && (ch < "A" || ch > "Z") && (code > 255 || code < 0)) {
       strbyte += 2; // 한글인 경우 2byte로 계산
     } else {
       strbyte += 1; // 숫자, 문자는 1byte로 계산
@@ -448,15 +534,10 @@ const birthCheck = () => {
         alert("회원가입이 완료되었습니다!");
         router.push("/");
       } else {
-        alert(
-          `회원가입 실패: ${response.data.message || "오류가 발생했습니다."}`
-        );
+        alert(`회원가입 실패: ${response.data.message || "오류가 발생했습니다."}`);
       }
     } catch (error) {
-      console.error(
-        "회원가입 요청 중 오류 발생:",
-        error.response?.data || error.message
-      );
+      console.error("회원가입 요청 중 오류 발생:", error.response?.data || error.message);
       alert("회원가입 중 오류가 발생했습니다. 다시 시도해주세요.");
     }
   };
@@ -475,12 +556,7 @@ const birthCheck = () => {
   const inputDay = parseInt(day.value);
 
   // 올바른 연도, 월, 일 범위 확인
-  if (
-    inputYear < 1900 ||
-    inputYear > currentYear ||
-    inputMonth > 12 ||
-    inputDay > 31
-  ) {
+  if (inputYear < 1900 || inputYear > currentYear || inputMonth > 12 || inputDay > 31) {
     birthMsg.value = "올바른 생년월일을 입력해주세요.";
     checkBirth.value = 0;
     return;
@@ -676,15 +752,14 @@ div {
 /* 로고 스타일 */
 .logo {
   width: 100%;
-  height: 130px;
+  height: 160px;
   text-align: center;
-  margin-top: -10px;
+  margin-top: -60px;
 }
 
 .logo img {
   width: 80%;
-  height: 130px;
-
+  height: 160px;
 }
 
 .logo a {
@@ -788,7 +863,7 @@ div {
 
 /* role 선택버튼 */
 .membership dl.radio_select div label.on span {
-  color: #fc0000;
+  color: #068148;
 }
 
 .membership dl.radio_select div {
@@ -826,7 +901,7 @@ div {
 }
 
 .membership dl.radio_select label.on {
-  border-color: #fc0000;
+  border-color: #089e58;
   /* background-color: #ff0000e3; */
   color: #f8182b;
   z-index: 3;
@@ -877,7 +952,7 @@ div {
   padding: 0;
   height: 50px;
   min-width: 49%;
-  background-color: #ff0000e3;
+  background-color: rgb(79, 168, 27);
   color: white;
   text-decoration: none;
   border-radius: 5px;
@@ -895,7 +970,7 @@ div {
 }
 
 .btn_wrap a:hover {
-  background-color: #df5668;
+  background-color: rgb(66, 161, 103);
 }
 
 /* 모달 디자인 / 학교  */

@@ -7,6 +7,7 @@ export const useMapSearchStore = defineStore("MapSearchStore", {
     schoolList: [], // 모든 학교 데이터
     properties: [], // 현재 지도에 표시할 매물 데이터
     selectedProperty: null, // 선택된 매물
+    mapCenter: { latitude: 37.5665, longitude: 126.978 }, // 지도 중심 좌표 초기값
   }),
   actions: {
     loadSchools() {
@@ -22,31 +23,30 @@ export const useMapSearchStore = defineStore("MapSearchStore", {
         const response = await axios.get("/map/searchBySchool", {
           params: { school: schoolName },
         });
-        this.properties = response.data; // 매물 데이터를 저장
+        this.properties = response.data; // 매물 데이터 저장
 
-        if (this.properties.length === 0) {
-          // 매물이 없을 경우 swal로 알림
+        if (this.properties.length > 0) {
+          // 매물이 있으면 지도 중심 좌표 업데이트
+          const firstProperty = this.properties[0];
+          this.mapCenter = {
+            latitude: firstProperty.latitude,
+            longitude: firstProperty.longitude,
+          };
+        } else {
           Swal.fire({
             icon: "info",
             title: "등록된 매물이 없습니다",
             text: `${schoolName} 근처에 등록된 매물이 없습니다.`,
           });
-        } else {
-          console.log(`${schoolName}의 매물:`, this.properties);
         }
       } catch (error) {
         console.error("학교 매물 검색 실패:", error);
-
-        // 요청 실패 시 swal로 오류 알림
         Swal.fire({
           icon: "error",
           title: "오류 발생",
           text: "학교 매물 데이터를 불러오는 중 문제가 발생했습니다.",
         });
       }
-    },
-    selectProperty(property) {
-      this.selectedProperty = property; // 선택된 매물 설정
     },
   },
 });

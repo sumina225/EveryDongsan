@@ -37,12 +37,15 @@
 
 <script setup>
 import { ref, computed, onMounted } from "vue";
+import { useRouter } from "vue-router";
 import Swal from "sweetalert2";
 import { useMapSearchStore } from "@/stores/MapSearchStore";
 import { useSchoolStore } from "@/stores/schoolStore";
 
 const mapSearchStore = useMapSearchStore();
 const schoolStore = useSchoolStore();
+const router = useRouter();
+
 const searchQuery = ref(""); // 검색어
 const isSchoolSelected = ref(false); // 학교 선택 여부
 const isModalOpen = ref(false); // 모달 열림 상태
@@ -52,6 +55,7 @@ onMounted(() => {
   schoolStore.loadSchools(); // 스토어의 loadSchools 메서드 호출
   console.log("학교 데이터:", schoolStore.schoolList); // 데이터 로드 확인
 });
+
 
 // 검색된 학교 목록 필터링
 const filteredSchools = computed(() => {
@@ -71,8 +75,8 @@ const handleSearchSchools = async () => {
     });
     return;
   }
-  console.log(searchQuery.value);
-  await mapSearchStore.searchBySchool(searchQuery.value); // Pinia 스토어를 통한 검색 요청
+
+  await mapSearchStore.searchBySchool(searchQuery.value);
 };
 
 // 모달 열기

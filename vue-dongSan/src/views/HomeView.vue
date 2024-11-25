@@ -4,26 +4,7 @@
     <div class="main-content">
       <MainSideBar />
       <div class="content">
-        <PostList title="섹션 1">
-          <router-link to="/searchMap"
-            ><p>여기는 섹션 1 내용입니다.</p></router-link
-          >
-        </PostList>
-        <PostList title="섹션 2">
-          <p>여기는 섹션 2 내용입니다.</p>
-        </PostList>
-        <PostList title="섹션 3">
-          <p>여기는 섹션 3 내용입니다.</p>
-        </PostList>
-        <PostList title="섹션 4">
-          <p>여기는 섹션 4 내용입니다.</p>
-        </PostList>
-        <PostList title="섹션 5">
-          <p>여기는 섹션 5 내용입니다.</p>
-        </PostList>
-        <PostList title="섹션 6">
-          <p>여기는 섹션 6 내용입니다.</p>
-        </PostList>
+        <SlidingBanner />
       </div>
     </div>
   </div>
@@ -34,6 +15,7 @@ import { defineComponent } from "vue"; // Vue 3에서 정의하는 방식
 import MainSideBar from "@/components/MainSideBar.vue";
 import MainBanner from "../components/MainBanner.vue";
 import PostList from "../components/PostList.vue";
+import SlidingBanner from "@/components/SlidingBanner.vue";
 
 export default defineComponent({
   name: "Home",
@@ -41,6 +23,7 @@ export default defineComponent({
     MainBanner,
     MainSideBar,
     PostList,
+    SlidingBanner,
   },
 });
 </script>

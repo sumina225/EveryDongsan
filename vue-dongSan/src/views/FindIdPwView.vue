@@ -6,10 +6,7 @@
           <li :class="{ on: activeTab === 'id' }" @click="activeTab = 'id'">
             <a href="#">아이디 찾기</a>
           </li>
-          <li
-            :class="{ on: activeTab === 'password' }"
-            @click="activeTab = 'password'"
-          >
+          <li :class="{ on: activeTab === 'password' }" @click="activeTab = 'password'">
             <a href="#">비밀번호 찾기</a>
           </li>
         </ul>
@@ -20,12 +17,7 @@
             찾고자 하는 <span>아이디</span>의 <span>이메일</span>을 입력하세요.
           </p>
           <form @submit.prevent="handleSubmit">
-            <input
-              type="email"
-              v-model="email"
-              placeholder="이메일을 입력하세요"
-              required
-            />
+            <input type="email" v-model="email" placeholder="이메일을 입력하세요" required />
             <button type="submit">아이디 찾기</button>
           </form>
         </div>
@@ -34,16 +26,10 @@
         <div v-if="activeTab === 'password'" class="find-password">
           <h3 class="pass_h3">비밀번호 찾기</h3>
           <p class="text_info">
-            <span>비밀번호</span>를 찾고자하는 <span>아이디</span>를
-            입력해주세요.
+            <span>비밀번호</span>를 찾고자하는 아이디의 <span>이메일</span>를 입력해주세요.
           </p>
           <form @submit.prevent="handleSubmit2">
-            <input
-              type="text"
-              v-model="email2"
-              placeholder="이메일을 입력하세요"
-              required
-            />
+            <input type="email" v-model="email2" placeholder="이메일을 입력하세요" required />
             <button type="submit">비밀번호 찾기</button>
           </form>
         </div>
@@ -106,7 +92,7 @@ const handleSubmit = async () => {
 
 // 비밀번호 찾기 요청 처리 함수
 const handleSubmit2 = async () => {
-  if (!email.value) {
+  if (!email2.value) {
     Swal.fire({
       icon: "warning",
       title: "입력 오류",
@@ -116,10 +102,8 @@ const handleSubmit2 = async () => {
   }
 
   try {
-    const response = await apiClient.post("/member/findPw", {
-      params: {
-        email: email2.value,
-      },
+    await apiClient.post("/member/findPw", {
+      email: email2.value,
     });
 
     Swal.fire({
@@ -266,7 +250,7 @@ ul {
 }
 .find-password button {
   padding: 10px 20px;
-  background-color: #fd3e3e;
+  background-color: rgb(79, 168, 27);
   color: #fff;
   border: none;
   cursor: pointer;

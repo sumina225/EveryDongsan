@@ -2,6 +2,7 @@
   <div id="map"></div>
 </template>
 
+
 <script setup>
 import { onMounted, watch } from "vue";
 import { useMapSearchStore } from "@/stores/MapSearchStore";
@@ -12,10 +13,19 @@ let map,
 
 // 지도 초기화
 onMounted(() => {
-  map = new kakao.maps.Map(document.getElementById("map"), {
+  const mapContainer = document.getElementById("map");
+
+  if (!mapContainer) {
+    console.error("#map 요소가 렌더링되지 않았습니다.");
+    return;
+  }
+
+  map = new kakao.maps.Map(mapContainer, {
     center: new kakao.maps.LatLng(37.5665, 126.978), // 초기 중심 좌표
     level: 3, // 확대 수준
   });
+
+  console.log("지도 초기화 완료");
 });
 
 // 마커 업데이트
@@ -49,6 +59,18 @@ watch(
     }
   },
   { deep: true }
+);
+
+// 지도 중심 이동 감시
+watch(
+  () => mapSearchStore.mapCenter,
+  (newCenter) => {
+    if (newCenter && newCenter.latitude && newCenter.longitude) {
+      map.setCenter(
+        new kakao.maps.LatLng(newCenter.latitude, newCenter.longitude)
+      );
+    }
+  }
 );
 </script>
 

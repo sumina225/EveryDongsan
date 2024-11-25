@@ -17,7 +17,7 @@ export const usePostStore = defineStore("addpost", {
                 if (!token) {
                     throw new Error("로그인이 필요합니다.");
                 }
-                console.log("여기까지왔어요2")
+                console.log(postData)
                 // API 요청
                 const response = await axios.post("/board/posts", postData, {
                     headers: {

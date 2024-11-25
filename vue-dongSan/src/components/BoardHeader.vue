@@ -88,7 +88,7 @@ const myList = () => {
   justify-content: space-between;
   align-items: center;
   width: 95%;
-  max-width: 1200px;
+  max-width: 1400px;
 }
 
 .navbar-logo img {
