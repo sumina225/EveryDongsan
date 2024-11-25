@@ -19,4 +19,9 @@ public class MainServiceImpl implements MainService{
 		return mainMapper.getBoardCount();
 	}
 
+	@Override
+	public List<Map<String, Object>> searchKeyword(String keyword) {
+		return mainMapper.searchKeyword(keyword);
+	}
+
 }

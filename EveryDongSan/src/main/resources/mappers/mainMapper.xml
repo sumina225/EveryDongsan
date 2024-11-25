@@ -18,5 +18,23 @@
 		order by
 		articleCount desc
 	</select>
+	
+	<select id="searchKeyword" parameterType="String" resultType="map">
+		SELECT
+		s.school AS schoolName,
+		COUNT(c.articleNo) AS articleCount
+		FROM
+		school s
+		LEFT JOIN
+		home h ON s.schoolId = h.schoolId
+		LEFT JOIN
+		community c ON h.no = c.homeNo
+		WHERE
+        s.school LIKE CONCAT('%', #{keyword}, '%')
+		GROUP BY
+		s.schoolId, s.school
+		order by
+		articleCount desc
+	</select>
 </mapper>
         

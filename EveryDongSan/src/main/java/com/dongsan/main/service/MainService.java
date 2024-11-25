@@ -5,4 +5,6 @@ import java.util.Map;
 
 public interface MainService {
 	List<Map<String,Object>> getBoardCount();
+	
+	List<Map<String,Object>> searchKeyword(String keyword);
 }
