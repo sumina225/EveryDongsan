@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.dongsan.main.mapper.MainMapper">
+	<select id="getBoardCount" resultType="map">
+		SELECT
+		s.school AS schoolName,
+		COUNT(c.articleNo) AS articleCount
+		FROM
+		school s
+		LEFT JOIN
+		home h ON s.schoolId = h.schoolId
+		LEFT JOIN
+		community c ON h.no = c.homeNo
+		GROUP BY
+		s.schoolId, s.school
+		order by
+		articleCount desc
+	</select>
+</mapper>
+        
