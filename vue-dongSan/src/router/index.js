@@ -3,7 +3,7 @@ import HomeView from "../views/HomeView.vue";
 import LoginView from "../views/LoginView.vue";
 import SignUpView from "@/views/SignUpView.vue";
 import FindView from "@/views/FindIdPwView.vue";
-import SearchMapView from "@/views/SearchMapView.vue";
+import MapView from "../views/MapView.vue";
 import MyPageView from "@/views/MyPageView.vue";
 import MyListView from "@/views/MyListView.vue";
 import BoardAllView from "@/views/BoardAllView.vue";
@@ -29,7 +29,7 @@ const routes = [
   },
   {
     path: "/searchMap",
-    component: SearchMapView,
+    component: MapView,
   },
   {
     path: "/myPage",

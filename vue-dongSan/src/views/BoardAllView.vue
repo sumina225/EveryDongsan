@@ -2,29 +2,39 @@
   <div class="board-view">
     <!-- 게시물 리스트 -->
     <ul class="post-list">
-      <BoardPostCard v-for="post in postStore.posts" :key="post.articleNo" :post="post"
-        @click="postStore.selectPost(post)" />
+      <BoardPostCard
+        v-for="post in postStore.posts"
+        :key="post.articleNo"
+        :post="post"
+        @click="postStore.selectPost(post)"
+      />
     </ul>
 
     <!-- 페이지네이션 -->
     <div class="pagination">
-      <button :disabled="postStore.currentPage === 1" @click="changePage(postStore.currentPage - 1)">
+      <button
+        :disabled="postStore.currentPage === 1"
+        @click="changePage(postStore.currentPage - 1)"
+      >
         이전
       </button>
-      <button v-for="page in postStore.totalPages" :key="page" :class="{ active: page === postStore.currentPage }"
-        @click="changePage(page)">
-        {{ page }}
-      </button>
-      <button :disabled="postStore.currentPage === postStore.totalPages" @click="changePage(postStore.currentPage + 1)">
+      <span>현재 페이지: {{ postStore.currentPage }}</span>
+      <button
+        :disabled="!postStore.posts.length"
+        @click="changePage(postStore.currentPage + 1)"
+      >
         다음
       </button>
     </div>
 
     <!-- 게시물 상세 모달 -->
-    <BoardModalCard v-if="postStore.selectedPost" :post="postStore.selectedPost" @close="postStore.closeModal" />
+    <BoardModalCard
+      v-if="postStore.selectedPost"
+      :post="postStore.selectedPost"
+      @close="postStore.closeModal"
+    />
   </div>
 </template>
-
 <script setup>
 import { onMounted, watch } from "vue";
 import { useBoardStore } from "../stores/useBoardStore.js";
@@ -53,11 +63,16 @@ onMounted(async () => {
 // );
 
 // 페이지 변경 로직
-const changePage = (page) => {
-  postStore.changePage(page);
+const changePage = async (page) => {
+  if (page < 1) return;
+  await postStore.changePage(page);
+
+  if (!postStore.posts.length) {
+    alert("마지막 페이지입니다.");
+    postStore.currentPage--;
+  }
 };
 </script>
-
 
 <style scoped>
 .board-view {
@@ -100,5 +115,12 @@ const changePage = (page) => {
 .pagination button:disabled {
   cursor: not-allowed;
   opacity: 0.5;
+}
+
+.pagination span {
+  display: inline-block;
+  margin: 0 10px;
+  font-weight: bold;
+  color: #555;
 }
 </style>

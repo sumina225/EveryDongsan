@@ -28,8 +28,6 @@
             />
             <button type="submit">아이디 찾기</button>
           </form>
-
-          
         </div>
 
         <!-- 비밀번호 찾기 화면 -->
@@ -42,14 +40,12 @@
           <form @submit.prevent="handleSubmit2">
             <input
               type="text"
-              v-model="userId"
-              placeholder="아이디를 입력하세요"
+              v-model="email2"
+              placeholder="이메일을 입력하세요"
               required
             />
             <button type="submit">비밀번호 찾기</button>
           </form>
-
-          
         </div>
       </div>
     </div>
@@ -62,7 +58,7 @@ import Swal from "sweetalert2";
 import apiClient from "@/axios";
 
 // 사용자 입력값을 관리하는 변수
-const userId = ref("");
+const email2 = ref("");
 const email = ref("");
 const activeTab = ref("id"); // 'id'와 'password' 탭을 관리하는 변수
 
@@ -79,7 +75,10 @@ const handleSubmit = async () => {
 
   try {
     const response = await apiClient.get("/member/findId", {
-      params: { emailId: email.value.split("@")[0], emailDomain: email.value.split("@")[1] },
+      params: {
+        emailId: email.value.split("@")[0],
+        emailDomain: email.value.split("@")[1],
+      },
     });
 
     if (response.status === 200) {
@@ -107,18 +106,20 @@ const handleSubmit = async () => {
 
 // 비밀번호 찾기 요청 처리 함수
 const handleSubmit2 = async () => {
-  if (!userId.value) {
+  if (!email.value) {
     Swal.fire({
       icon: "warning",
       title: "입력 오류",
-      text: "아이디를 입력해주세요.",
+      text: "이메일을 입력해주세요.",
     });
     return;
   }
 
   try {
     const response = await apiClient.post("/member/findPw", {
-      email: userId.value, // 이메일 기반으로 찾는 로직
+      params: {
+        email: email2.value,
+      },
     });
 
     Swal.fire({
