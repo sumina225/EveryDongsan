@@ -1,5 +1,13 @@
 <template>
   <div class="board-view">
+    <!-- AI 검색 버튼 -->
+    <div class="aiIcon" @click="AIModalOpen">
+      <img src="../assets/AI.png" alt="AI" />
+    </div>
+
+    <!-- AI 검색 모달 -->
+    <AISearchModal :AIOpen="AIOpen" @closeAI="closeAI" />
+
     <!-- 게시물 리스트 -->
     <ul class="post-list">
       <BoardPostCard
@@ -36,12 +44,23 @@
   </div>
 </template>
 <script setup>
-import { onMounted, watch } from "vue";
+import { onMounted, watch, ref } from "vue";
 import { useBoardStore } from "../stores/useBoardStore.js";
 import { useTabStore } from "../stores/useTabStore.js"; // 탭 스토어 추가
 import BoardPostCard from "../components/BoardPostCard.vue";
 import BoardModalCard from "../components/BoardModalCard.vue";
 import { useRouter } from "vue-router";
+import AISearchModal from "../components/AISearchModal.vue";
+
+const AIOpen = ref(false); // 모달 열기/닫기 상태
+// AI 온오프
+const AIModalOpen = () => {
+  AIOpen.value = true;
+};
+
+const closeAI = () => {
+  AIOpen.value = false;
+};
 
 const router = useRouter();
 const postStore = useBoardStore();
@@ -122,5 +141,24 @@ const changePage = async (page) => {
   margin: 0 10px;
   font-weight: bold;
   color: #555;
+}
+
+/* AI */
+.aiIcon {
+  position: fixed;
+  top: 100px;
+  left: 10px;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%; /* 둥근 형태 */
+  overflow: hidden; /* 이미지 밖 잘림 */
+  cursor: pointer;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.aiIcon img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* 이미지가 둥근 형태에 맞게 잘림 */
 }
 </style>

@@ -4,8 +4,13 @@
       <!-- 사진 슬라이드 -->
       <div class="modal-slider">
         <div class="slider-container">
-          <img v-for="(image, index) in images" :key="index" :src="image" alt="매물 이미지"
-            :class="{ active: index === currentSlide }" />
+          <img
+            v-for="(image, index) in images"
+            :key="index"
+            :src="image"
+            alt="매물 이미지"
+            :class="{ active: index === currentSlide }"
+          />
           <button class="prev-btn" @click="prevSlide">‹</button>
           <button class="next-btn" @click="nextSlide">›</button>
         </div>
@@ -42,9 +47,17 @@
           <div class="info-item">
             <i class="icon-star"></i>
             <span class="stars">
-              <i v-for="n in Math.floor(post.home.score)" :key="n" class="star full"></i>
+              <i
+                v-for="n in Math.floor(post.home.score)"
+                :key="n"
+                class="star full"
+              ></i>
               <i v-if="post.home.score % 1 !== 0" class="star half"></i>
             </span>
+          </div>
+          <div class="info-item">
+            <i class="icon-school"></i>
+            <span>연락처: {{ post.tel }}</span>
           </div>
         </div>
       </div>
@@ -58,8 +71,6 @@
     </div>
   </div>
 </template>
-
-
 
 <script setup>
 import { ref } from "vue";
@@ -227,16 +238,18 @@ const prevSlide = () => {
   height: 16px;
   display: inline-block;
   background-color: gold;
-  clip-path: polygon(50% 0%,
-      61% 35%,
-      98% 35%,
-      68% 57%,
-      79% 91%,
-      50% 70%,
-      21% 91%,
-      32% 57%,
-      2% 35%,
-      39% 35%);
+  clip-path: polygon(
+    50% 0%,
+    61% 35%,
+    98% 35%,
+    68% 57%,
+    79% 91%,
+    50% 70%,
+    21% 91%,
+    32% 57%,
+    2% 35%,
+    39% 35%
+  );
   /* 별 모양 */
 }
 

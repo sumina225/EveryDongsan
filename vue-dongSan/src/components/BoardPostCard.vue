@@ -29,8 +29,8 @@ const props = defineProps({
 
 const postStore = useBoardStore();
 const openPost = () => {
-  console.log("post selected:",props.post); 
-}
+  console.log("post selected:", props.post);
+};
 </script>
 
 <style scoped>

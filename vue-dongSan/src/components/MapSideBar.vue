@@ -23,25 +23,33 @@
         <img src="../assets/apt.png" alt="매물 이미지" />
       </div>
       <div class="property-info">
-        <div class="property-title">{{ property.school }} · {{ property.name }}</div>
-        <div class="property-price">{{ property.price }} ({{ property.rentalType }})</div>
-        <div class="property-size">{{ property.area }}m² ({{ property.category }})</div>
+        <div class="property-title">
+          {{ property.school }} · {{ property.name }}
+        </div>
+        <div class="property-price">
+          {{ property.price }} ({{ property.rentalType }})
+        </div>
+        <div class="property-size">
+          {{ property.area }}m² ({{ property.category }})
+        </div>
         <div class="property-description">매물 점수: {{ property.score }}</div>
       </div>
     </div>
-    <div class="NoCard" v-show="visibleProperties.length <= 0">등록된 매물이 없습니다.</div>
+    <div class="NoCard" v-show="visibleProperties.length <= 0">
+      등록된 매물이 없습니다.
+    </div>
   </div>
 
   <!-- 모달 -->
   <PropertyDetailModal
-    v-if="isModalOpen"
+    v-if="isModalOpen10"
     :property="selectedProperty"
-    @close="isModalOpen = false"
+    @close="isModalOpen10 = false"
   />
 </template>
 
 <script setup>
-import { ref, computed } from "vue";
+import { ref, computed, watch } from "vue";
 import { useMapSearchStore } from "@/stores/MapSearchStore";
 import { usePropertyStore } from "../stores/PropertyStore";
 import PropertyDetailModal from "./PropertyDetailModal.vue";
@@ -50,10 +58,13 @@ const mapSearchStore = useMapSearchStore();
 const propertyStore = usePropertyStore();
 const selectedProperty = ref(null); // 선택된 매물 데이터
 const properties = computed(() => mapSearchStore.properties); // 전체 매물 데이터
+const isModalOpen10 = ref(false);
 
 // 인피니티 스크롤 관련 상태 관리
 const visibleCount = ref(7); // 처음 표시할 매물 개수
-const visibleProperties = computed(() => properties.value.slice(0, visibleCount.value)); // 화면에 보이는 매물만
+const visibleProperties = computed(() =>
+  properties.value.slice(0, visibleCount.value)
+); // 화면에 보이는 매물만
 
 // 스크롤 이벤트 핸들러
 const handleScroll = (event) => {
@@ -67,49 +78,106 @@ const handleScroll = (event) => {
 // 추가 매물 로드
 const loadMoreProperties = () => {
   if (visibleCount.value < properties.value.length) {
-    visibleCount.value += 7; // 한 번에 7개씩 로드
+    visibleCount.value += 7;
   }
 };
-
-const isModalOpen = ref(false);
 
 //상세정보보기
 const handlePropertyClick = async (no) => {
   try {
     const propertyDetail = await propertyStore.fetchPropertyByNo(no);
 
-    console.log("가져온 매물 상세 정보:", propertyDetail);
-    selectedProperty.value = propertyDetail; // 선택된 매물 데이터 저장
-    isModalOpen.value = true; // 모달 열기
+    isModalOpen10.value = true; // 데이터를 설정한 후 모달 열기
+    selectedProperty.value = propertyDetail;
+    console.log(selectedProperty.value);
+    console.log(isModalOpen10.value);
   } catch (error) {
     console.error("매물 상세 정보를 가져오는 중 오류 발생:", error);
   }
 };
 
-// 메뉴 항목 관리
-const menuItems = ref([{ label: "전세" }, { label: "월세" }, { label: "별점" }]);
+watch(isModalOpen10, (newValue) => {
+  console.log("isModalOpen 값 변경:", newValue);
+});
 
-// 메뉴 클릭 시 필터링 처리
+// 메뉴 항목 관리
+const menuItems = ref([
+  { label: "전세" },
+  { label: "월세" },
+  { label: "별점" },
+]);
+
+let markers = []; // 지도에 표시할 마커들을 저장
+
+const updateMapMarkers = () => {
+  console.log("마커 업데이트 시작");
+
+  // 기존 마커 삭제
+  markers.forEach((marker) => marker.setMap(null));
+  markers = [];
+
+  // 새로운 마커 추가
+  mapSearchStore.properties.forEach((property) => {
+    if (property.latitude && property.longitude) {
+      const marker = new kakao.maps.Marker({
+        map,
+        position: new kakao.maps.LatLng(property.latitude, property.longitude),
+      });
+      kakao.maps.event.addListener(marker, "click", () => {
+        mapSearchStore.selectProperty(property); // 매물 선택
+      });
+      markers.push(marker);
+    } else {
+      console.warn("유효하지 않은 좌표:", property);
+    }
+  });
+
+  console.log("현재 추가된 마커 개수:", markers.length);
+
+  // 지도 중심 이동
+  if (mapSearchStore.properties.length > 0) {
+    const firstProperty = mapSearchStore.properties[0];
+    if (firstProperty.latitude && firstProperty.longitude) {
+      map.setCenter(
+        new kakao.maps.LatLng(firstProperty.latitude, firstProperty.longitude)
+      );
+    }
+  }
+
+  console.log("마커 업데이트 완료");
+};
+
+const originalProperties = ref([...mapSearchStore.properties]); // 원본 데이터 저장
+
 const handleMenuClick = (menuLabel) => {
   console.log(`선택된 메뉴: ${menuLabel}`);
+
+  // 필터링 기준에 따른 데이터 갱신
   if (menuLabel === "전세") {
-    mapSearchStore.properties = mapSearchStore.properties.filter(
+    mapSearchStore.properties = originalProperties.value.filter(
       (property) => property.rentalType === "전세"
     );
   } else if (menuLabel === "월세") {
-    mapSearchStore.properties = mapSearchStore.properties.filter(
+    mapSearchStore.properties = originalProperties.value.filter(
       (property) => property.rentalType === "월세"
     );
   } else if (menuLabel === "별점") {
+    mapSearchStore.properties = [...originalProperties.value]; // 원본 데이터를 복사
     mapSearchStore.properties.sort((a, b) => b.score - a.score);
   }
+
+  // 필터링 후 초기화
+  visibleCount.value = 7;
+
+  // 지도 마커 업데이트
+  updateMapMarkers();
 };
 </script>
 
 <style scoped>
 .sidebar {
   width: 340px;
-  height: calc(100vh - 20px); /* 맵 높이에 맞춤 */
+  height: calc(100vh - 18px); /* 맵 높이에 맞춤 */
   background-color: #fff;
   overflow-y: auto;
   padding: 16px;
@@ -233,7 +301,7 @@ const handleMenuClick = (menuLabel) => {
   text-align: center;
   margin-top: 40px;
   font-weight: 700;
-  font-family: "Pretendard", -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo",
-    "Malgun Gothic", "맑은 고딕", helvetica, sans-serif;
+  font-family: "Pretendard", -apple-system, BlinkMacSystemFont,
+    "Apple SD Gothic Neo", "Malgun Gothic", "맑은 고딕", helvetica, sans-serif;
 }
 </style>
